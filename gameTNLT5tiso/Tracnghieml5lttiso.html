@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>🎯 Trắc Nghiệm: Tỉ Số, Tỉ Số Phần Trăm</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Baloo 2', cursive;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Floating decorations */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            background: #FFD700;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            background: #FF6B6B;
+            top: 70%;
+            left: 80%;
+            animation-delay: 1s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            background: #4ECDC4;
+            top: 40%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+
+        .shape:nth-child(4) {
+            width: 50px;
+            height: 50px;
+            background: #A8E6CF;
+            top: 80%;
+            left: 20%;
+            animation-delay: 3s;
+        }
+
+        .shape:nth-child(5) {
+            width: 70px;
+            height: 70px;
+            background: #FF8C94;
+            top: 20%;
+            left: 70%;
+            animation-delay: 4s;
+        }
+
+        .shape:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            background: #98D8C8;
+            top: 60%;
+            left: 50%;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            color: #764ba2;
+            text-shadow: 2px 2px 0 #f093fb;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .stat-icon.question {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-icon.correct {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+
+        .stat-icon.wrong {
+            background: linear-gradient(135deg, #FF5722, #FF9800);
+        }
+
+        .stat-icon.score {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .stat-info p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff5f7 100%);
+            border-radius: 15px;
+            border-left: 5px solid #764ba2;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 18px 22px;
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #764ba2;
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.2);
+        }
+
+        .option-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-color: #4CAF50;
+        }
+
+        .option.correct .option-letter {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+        }
+
+        .option.wrong {
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+            border-color: #F44336;
+        }
+
+        .option.wrong .option-letter {
+            background: linear-gradient(135deg, #F44336, #FF5722);
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Feedback */
+        .feedback {
+            display: none;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .feedback.correct {
+            display: block;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            color: #2E7D32;
+        }
+
+        .feedback.wrong {
+            display: block;
+            background: linear-gradient(135deg, #FFEBEE, #FFCDD2);
+            color: #C62828;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: none;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .nav-buttons.active {
+            display: flex;
+        }
+
+        .nav-btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            font-family: 'Baloo 2', cursive;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 50px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .results-section.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .trophy-icon {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: wiggle 0.5s ease infinite;
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-5deg);
+            }
+
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+
+        .results-section h2 {
+            font-size: 2.5rem;
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        .score-display {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 20px 0;
+        }
+
+        .score-message {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .stars {
+            font-size: 3rem;
+            margin: 20px 0;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Volume Control */
+        .volume-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .volume-control:hover {
+            background: white;
+        }
+
+        /* Mascot */
+        .mascot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 4rem;
+            animation: bounce 2s ease infinite;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .mascot:hover {
+            transform: scale(1.1);
+        }
+
+        /* Touch-friendly for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .option {
+                min-height: 60px;
+            }
+
+            .option:active {
+                transform: scale(0.98);
+                opacity: 0.9;
+            }
+
+            .nav-btn:active {
+                transform: scale(0.95);
+            }
+        }
+
+        /* Responsive - Tablets */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .question-text {
+                font-size: 1.05rem;
+                padding: 15px;
+            }
+
+            .option {
+                padding: 14px 12px;
+                font-size: 0.95rem;
+            }
+
+            .option-letter {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .stats-bar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 15px 10px;
+                gap: 10px;
+            }
+
+            .stat-item {
+                flex: 0 0 45%;
+            }
+
+            .stat-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+
+            .stat-info h3 {
+                font-size: 1.2rem;
+            }
+
+            .stat-info p {
+                font-size: 0.8rem;
+            }
+
+            .volume-control {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+
+            .mascot {
+                font-size: 2.5rem;
+                bottom: 10px;
+                right: 10px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .quiz-container {
+                padding: 20px 15px;
+            }
+
+            .nav-btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+
+            .results-section {
+                padding: 30px 20px;
+            }
+
+            .trophy-icon {
+                font-size: 4rem;
+            }
+
+            .results-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .score-display {
+                font-size: 3rem;
+            }
+
+            .stars {
+                font-size: 2rem;
+            }
+        }
+
+        /* Responsive - Small phones */
+        @media (max-width: 480px) {
+            .header {
+                padding: 20px 15px;
+                border-radius: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .question-number {
+                font-size: 0.85rem;
+                padding: 6px 14px;
+            }
+
+            .question-text {
+                font-size: 0.95rem;
+                padding: 12px;
+                margin-bottom: 20px;
+            }
+
+            .options-container {
+                gap: 10px;
+            }
+
+            .option {
+                padding: 12px 10px;
+                font-size: 0.9rem;
+                border-radius: 12px;
+                gap: 10px;
+            }
+
+            .option-letter {
+                width: 32px;
+                height: 32px;
+                font-size: 0.85rem;
+            }
+
+            .stats-bar {
+                border-radius: 15px;
+                margin-bottom: 15px;
+            }
+
+            .stat-item {
+                gap: 6px;
+            }
+
+            .feedback {
+                font-size: 1rem;
+                padding: 15px;
+            }
+
+            .nav-buttons {
+                margin-top: 20px;
+            }
+
+            .nav-btn {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+                width: 100%;
+            }
+
+            .progress-bar {
+                height: 10px;
+                margin-bottom: 20px;
+            }
+
+            .volume-control span:last-child {
+                display: none;
+            }
+
+            .floating-shapes {
+                display: none;
+            }
+        }
+
+        /* iPhone X and newer safe area */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(10px, env(safe-area-inset-left));
+                padding-right: max(10px, env(safe-area-inset-right));
+                padding-bottom: max(20px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Volume Control -->
+    <div class="volume-control" onclick="toggleSound()">
+        <span id="volumeIcon">🔊</span>
+        <span>Âm thanh</span>
+    </div>
+
+    <!-- Mascot -->
+    <div class="mascot" onclick="mascotClick()">🦊</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 20px; border-radius: 30px; font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); letter-spacing: 0.5px;">
+                🏫 Hệ thống lớp học theo yêu cầu EEC-0829120482
+            </div>
+            <h1>🎯 Trắc Nghiệm: Tỉ Số, Tỉ Số Phần Trăm</h1>
+            <p>Học mà chơi, chơi mà học! 📚✨</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-item">
+                <div class="stat-icon question">📋</div>
+                <div class="stat-info">
+                    <h3 id="currentQuestion">1/20</h3>
+                    <p>Câu hỏi</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon correct">✅</div>
+                <div class="stat-info">
+                    <h3 id="correctCount">0</h3>
+                    <p>Đúng</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon wrong">❌</div>
+                <div class="stat-info">
+                    <h3 id="wrongCount">0</h3>
+                    <p>Sai</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon score">⭐</div>
+                <div class="stat-info">
+                    <h3 id="scoreDisplay">0</h3>
+                    <p>Điểm</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div class="quiz-container" id="quizContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-number" id="questionNumber">Câu 1</div>
+            <div class="question-text" id="questionText"></div>
+            <div class="options-container" id="optionsContainer"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="nav-buttons" id="navButtons">
+                <button class="nav-btn next-btn" onclick="nextQuestion()">Câu tiếp theo ➡️</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="trophy-icon" id="trophyIcon">🏆</div>
+            <h2>Chúc mừng! Bạn đã hoàn thành!</h2>
+            <div class="score-display" id="finalScore">0/20</div>
+            <div class="stars" id="stars">⭐⭐⭐⭐⭐</div>
+            <p class="score-message" id="scoreMessage">Xuất sắc!</p>
+            <p id="completionTime" style="color: #888; font-size: 1rem; margin: 15px 0;">🕐 Hoàn thành lúc: --</p>
+            <button class="nav-btn restart-btn" onclick="restartGame()">🔄 Chơi lại</button>
+        </div>
+    </div>
+
+    <script>
+        // Audio Context for sounds - Mobile optimized
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
+        let audioUnlocked = false;
+
+        // Initialize audio context on user interaction (required for mobile)
+        function initAudio() {
+            if (!audioCtx) {
+                try {
+                    audioCtx = new AudioContext();
+                } catch (e) {
+                    console.log('Audio not supported');
+                    return false;
+                }
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return true;
+        }
+
+        // Unlock audio for mobile devices (iOS/Android)
+        function unlockAudio() {
+            if (audioUnlocked) return;
+
+            if (initAudio()) {
+                // Create and play a silent sound to unlock audio
+                const buffer = audioCtx.createBuffer(1, 1, 22050);
+                const source = audioCtx.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+                audioUnlocked = true;
+            }
+        }
+
+        // Add touch/click listeners to unlock audio on mobile
+        ['touchstart', 'touchend', 'click'].forEach(event => {
+            document.addEventListener(event, unlockAudio, { once: true, passive: true });
+        });
+
+        // Sound effects using Web Audio API
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'click') {
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                oscillator.start();
+                oscillator.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'complete') {
+                const frequencies = [523, 659, 784, 1047];
+                frequencies.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i * 0.15 + 0.3);
+                    osc.start(audioCtx.currentTime + i * 0.15);
+                    osc.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+                });
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('volumeIcon').textContent = soundEnabled ? '🔊' : '🔇';
+            if (soundEnabled) {
+                initAudio();
+                playSound('click');
+            }
+        }
+
+        function mascotClick() {
+            initAudio();
+            playSound('click');
+            const mascot = document.querySelector('.mascot');
+            mascot.style.animation = 'none';
+            mascot.offsetHeight;
+            mascot.style.animation = 'wiggle 0.3s ease';
+            setTimeout(() => {
+                mascot.style.animation = 'bounce 2s ease infinite';
+            }, 300);
+        }
+
+        // All 20 questions from the document
+        const questions = [
+            {
+                number: "1",
+                text: "Tỉ số của số bạn nam so với số bạn nữ trong một lớp là 2/3. Điều này có nghĩa là gì?",
+                options: [
+                    { letter: "A", text: "Lớp có tổng cộng 5 bạn." },
+                    { letter: "B", text: "Số bạn nam là 2 và số bạn nữ là 3." },
+                    { letter: "C", text: "Số bạn nữ nhiều hơn số bạn nam là 1 bạn." },
+                    { letter: "D", text: "Cứ 2 bạn nam thì có 3 bạn nữ." }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: "2",
+                text: "Một \"tỉ số phần trăm\" về cơ bản là một tỉ số có đặc điểm quan trọng nào?",
+                options: [
+                    { letter: "A", text: "Là một tỉ số có mẫu số bằng 100." },
+                    { letter: "B", text: "Là một tỉ số được viết dưới dạng số thập phân." },
+                    { letter: "C", text: "Là một tỉ số luôn nhỏ hơn 1." },
+                    { letter: "D", text: "Là một tỉ số có tử số bằng 100." }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: "3",
+                text: "Tỉ lệ bản đồ 1 : 10.000 có ý nghĩa là gì?",
+                options: [
+                    { letter: "A", text: "1 cm trên bản đồ bằng 10.000 mét trên thực tế." },
+                    { letter: "B", text: "10.000 đơn vị độ dài trên bản đồ tương ứng với 1 đơn vị độ dài trên thực tế." },
+                    { letter: "C", text: "Toàn bộ bản đồ biểu diễn một khu vực có diện tích 10.000 m²." },
+                    { letter: "D", text: "1 đơn vị độ dài trên bản đồ tương ứng với 10.000 đơn vị độ dài đó trên thực tế." }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: "4",
+                text: "Để tính độ dài thật của một con sông dựa vào bản đồ, bạn cần biết những thông tin nào?",
+                options: [
+                    { letter: "A", text: "Chỉ cần tỉ lệ của bản đồ." },
+                    { letter: "B", text: "Chỉ cần độ dài của con sông trên bản đồ." },
+                    { letter: "C", text: "Tên của con sông và vị trí địa lý của nó." },
+                    { letter: "D", text: "Độ dài của con sông trên bản đồ và tỉ lệ của bản đồ đó." }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: "5",
+                text: "Phương pháp chung để tìm độ dài trên bản đồ của một quãng đường khi biết độ dài thật và tỉ lệ bản đồ là gì?",
+                options: [
+                    { letter: "A", text: "Lấy độ dài thật chia cho mẫu số của tỉ lệ bản đồ (sau khi đã đồng nhất đơn vị)." },
+                    { letter: "B", text: "Lấy mẫu số của tỉ lệ bản đồ chia cho độ dài thật." },
+                    { letter: "C", text: "Chuyển đổi độ dài thật sang kilômét và ghi vào bản đồ." },
+                    { letter: "D", text: "Lấy độ dài thật nhân với mẫu số của tỉ lệ bản đồ." }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: "6",
+                text: "So sánh hai bản đồ cùng kích thước, một bản đồ có tỉ lệ 1 : 25.000 và một bản đồ có tỉ lệ 1 : 1.000.000. Bản đồ nào sẽ hiển thị khu vực được biểu diễn một cách chi tiết hơn?",
+                options: [
+                    { letter: "A", text: "Bản đồ có tỉ lệ 1 : 25.000." },
+                    { letter: "B", text: "Bản đồ có tỉ lệ 1 : 1.000.000." },
+                    { letter: "C", text: "Cả hai bản đồ hiển thị chi tiết như nhau." },
+                    { letter: "D", text: "Không thể xác định được nếu không biết đó là khu vực nào." }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: "7",
+                text: "Tại sao việc đồng nhất đơn vị đo (ví dụ: đổi km sang cm) lại là một bước quan trọng trong các bài toán về tỉ lệ bản đồ?",
+                options: [
+                    { letter: "A", text: "Vì bản đồ luôn luôn được vẽ bằng đơn vị centimet." },
+                    { letter: "B", text: "Vì tỉ lệ bản đồ là một tỉ số không có đơn vị, nó so sánh hai độ dài có cùng đơn vị đo." },
+                    { letter: "C", text: "Vì các đơn vị đo quốc tế yêu cầu phải dùng centimet." },
+                    { letter: "D", text: "Để làm cho các con số tính toán trở nên lớn hơn và dễ nhìn hơn." }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: "8",
+                text: "Để chuyển một phân số bất kỳ thành tỉ số phần trăm, phương pháp chung là gì?",
+                options: [
+                    { letter: "A", text: "Nhân cả tử và mẫu với 100." },
+                    { letter: "B", text: "Lấy tử số chia cho mẫu số rồi nhân kết quả với 100 và viết ký hiệu %." },
+                    { letter: "C", text: "Lấy mẫu số chia cho tử số rồi nhân với 100." },
+                    { letter: "D", text: "Chỉ cần thêm ký hiệu % vào sau phân số." }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: "9",
+                text: "Công thức nào sau đây mô tả đúng phương pháp tính độ dài thật từ các thông tin trên bản đồ?",
+                options: [
+                    { letter: "A", text: "Độ dài thật = Mẫu số của tỉ lệ ÷ Độ dài trên bản đồ" },
+                    { letter: "B", text: "Độ dài thật = Độ dài trên bản đồ × Mẫu số của tỉ lệ" },
+                    { letter: "C", text: "Độ dài thật = Độ dài trên bản đồ ÷ Mẫu số của tỉ lệ" },
+                    { letter: "D", text: "Độ dài thật = Độ dài trên bản đồ + Mẫu số của tỉ lệ" }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: "10",
+                text: "Một tỉ số phần trăm lớn hơn 100% (ví dụ: 113%) có ý nghĩa lý thuyết là gì khi so sánh số A với số B?",
+                options: [
+                    { letter: "A", text: "Số A lớn hơn số B." },
+                    { letter: "B", text: "Số A nhỏ hơn số B." },
+                    { letter: "C", text: "Số A bằng số B." },
+                    { letter: "D", text: "Phép tính đã bị sai." }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: "11",
+                text: "Cách viết \"Tỉ lệ 1 : 500.000\" tương đương với cách viết nào dưới dạng phân số?",
+                options: [
+                    { letter: "A", text: "500.000 : 1" },
+                    { letter: "B", text: "500.000/1" },
+                    { letter: "C", text: "1 × 500.000" },
+                    { letter: "D", text: "1/500.000" }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: "12",
+                text: "Khi giữ nguyên độ dài thật của một con đường, nếu biểu diễn nó trên một bản đồ có tỉ lệ với mẫu số nhỏ hơn (ví dụ: từ 1:2000 sang 1:500), độ dài của con đường trên bản đồ sẽ thay đổi như thế nào?",
+                options: [
+                    { letter: "A", text: "Thay đổi không thể đoán trước." },
+                    { letter: "B", text: "Sẽ ngắn hơn." },
+                    { letter: "C", text: "Sẽ dài hơn." },
+                    { letter: "D", text: "Vẫn giữ nguyên." }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: "13",
+                text: "Trong một bài toán, sau khi tính toán bạn tìm ra chiều rộng của một khu đất trên bản đồ là 5 cm. Để hoàn thành bài toán, bước phương pháp cuối cùng là gì?",
+                options: [
+                    { letter: "A", text: "Vẽ lại khu đất với chiều rộng 5 cm." },
+                    { letter: "B", text: "Đổi đơn vị sang mét." },
+                    { letter: "C", text: "Viết đáp số kèm theo đơn vị đo chính xác." },
+                    { letter: "D", text: "Kiểm tra lại phép chia." }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: "14",
+                text: "Trong cách viết tỉ số dưới dạng phân số a/b, các thành phần \"a\" và \"b\" có tên gọi là gì?",
+                options: [
+                    { letter: "A", text: "\"a\" là mẫu số và \"b\" là tử số." },
+                    { letter: "B", text: "\"a\" là số bị chia và \"b\" là số chia." },
+                    { letter: "C", text: "\"a\" là tỉ số và \"b\" là phần trăm." },
+                    { letter: "D", text: "\"a\" là tử số và \"b\" là mẫu số." }
+                ],
+                correctAnswer: "D"
+            },
+            {
+                number: "15",
+                text: "Nếu tỉ số của số ô tô điện và tổng số ô tô là 3/7, phương pháp để tìm tỉ số của số ô tô điện và số ô tô chạy xăng là gì?",
+                options: [
+                    { letter: "A", text: "Lấy tỉ số ban đầu đảo ngược lại là 7/3." },
+                    { letter: "B", text: "Lấy 7 trừ 3, tỉ số cần tìm là 3/4." },
+                    { letter: "C", text: "Tỉ số cần tìm vẫn là 3/7." },
+                    { letter: "D", text: "Tỉ số này không thể xác định được." }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: "16",
+                text: "Khẳng định nào sau đây mô tả đúng nhất về mặt lý thuyết mối quan hệ giữa tỉ số, phân số và số thập phân?",
+                options: [
+                    { letter: "A", text: "Chúng là ba khái niệm hoàn toàn khác nhau và không liên quan." },
+                    { letter: "B", text: "Một tỉ số có thể được biểu diễn dưới dạng phân số, và giá trị của nó có thể được viết thành số thập phân." },
+                    { letter: "C", text: "Chỉ có số thập phân mới có thể chuyển thành tỉ số phần trăm." },
+                    { letter: "D", text: "Phân số là một trường hợp đặc biệt của tỉ số phần trăm." }
+                ],
+                correctAnswer: "B"
+            },
+            {
+                number: "17",
+                text: "Để tìm tỉ số phần trăm của 9 so với 36, bước phương pháp đầu tiên là gì?",
+                options: [
+                    { letter: "A", text: "Viết tỉ số của 9 và 36 dưới dạng phân số 9/36." },
+                    { letter: "B", text: "Lấy 36 chia cho 9." },
+                    { letter: "C", text: "Nhân 9 với 100." },
+                    { letter: "D", text: "Tìm một số để nhân với 36 được 100." }
+                ],
+                correctAnswer: "A"
+            },
+            {
+                number: "18",
+                text: "Một bản đồ không ghi tỉ lệ. Phương pháp nào sau đây là không thể thực hiện được?",
+                options: [
+                    { letter: "A", text: "Xác định phương hướng trên bản đồ." },
+                    { letter: "B", text: "Tìm vị trí tương đối của một thành phố so với một con sông." },
+                    { letter: "C", text: "Tính toán khoảng cách thực tế giữa hai địa điểm." },
+                    { letter: "D", text: "So sánh độ dài tương đối giữa hai con đường trên bản đồ." }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: "19",
+                text: "Câu \"Dân số tăng 1,2%\" có nghĩa là gì về mặt lý thuyết?",
+                options: [
+                    { letter: "A", text: "Dân số hiện tại là 101,2 người." },
+                    { letter: "B", text: "Dân số đã tăng thêm 1,2 người." },
+                    { letter: "C", text: "Nếu dân số ban đầu là 100 người, thì nay đã tăng thêm 1,2 người." },
+                    { letter: "D", text: "Dân số hiện tại là 1,2% so với dân số ban đầu." }
+                ],
+                correctAnswer: "C"
+            },
+            {
+                number: "20",
+                text: "Theo định nghĩa, tỉ số của số a và số b (với b≠0) được viết như thế nào?",
+                options: [
+                    { letter: "A", text: "a × b" },
+                    { letter: "B", text: "a - b" },
+                    { letter: "C", text: "a : b hoặc a/b" },
+                    { letter: "D", text: "b : a hoặc b/a" }
+                ],
+                correctAnswer: "C"
+            }
+        ];
+
+        // Game state
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let answered = false;
+
+        // Start game immediately when page loads
+        window.onload = function () {
+            showQuestion();
+        };
+
+        // Show question
+        function showQuestion() {
+            answered = false;
+            const question = questions[currentQuestionIndex];
+
+            // Update stats
+            document.getElementById('currentQuestion').textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('wrongCount').textContent = wrongAnswers;
+            document.getElementById('scoreDisplay').textContent = score;
+
+            // Update progress
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+
+            // Show question
+            document.getElementById('questionNumber').textContent = `Câu ${question.number}`;
+            document.getElementById('questionText').textContent = question.text;
+
+            // Show options
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.innerHTML = `
+                    <span class="option-letter">${option.letter}</span>
+                    <span class="option-text">${option.text}</span>
+                `;
+                optionEl.onclick = () => selectAnswer(option.letter, optionEl);
+                optionsContainer.appendChild(optionEl);
+            });
+
+            // Hide feedback and nav
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('navButtons').classList.remove('active');
+
+            // Show quiz container, hide results
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('resultsSection').classList.remove('active');
+        }
+
+        // Select answer
+        function selectAnswer(letter, element) {
+            if (answered) return;
+            answered = true;
+
+            initAudio();
+
+            const question = questions[currentQuestionIndex];
+            const isCorrect = letter === question.correctAnswer;
+
+            // Disable all options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.add('disabled');
+            });
+
+            // Mark selected and correct
+            if (isCorrect) {
+                element.classList.add('correct');
+                score += 10;
+                correctAnswers++;
+                document.getElementById('feedback').className = 'feedback correct';
+                document.getElementById('feedback').innerHTML = '🎉 Chính xác! Tuyệt vời!';
+                playSound('correct');
+                createSparkles(element);
+            } else {
+                element.classList.add('wrong');
+                wrongAnswers++;
+                document.getElementById('feedback').className = 'feedback wrong';
+                document.getElementById('feedback').innerHTML = `😅 Chưa đúng rồi! Đáp án đúng là: <strong>${question.correctAnswer}</strong>`;
+                playSound('wrong');
+
+                // Highlight correct answer
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.querySelector('.option-letter').textContent === question.correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+
+            // Update stats
+            document.getElementById('correctCount').textContent = correctAnswers;
+            document.getElementById('wrongCount').textContent = wrongAnswers;
+            document.getElementById('scoreDisplay').textContent = score;
+
+            // Show next button
+            document.getElementById('navButtons').classList.add('active');
+
+            // Change button text for last question
+            if (currentQuestionIndex === questions.length - 1) {
+                document.querySelector('.next-btn').textContent = 'Xem kết quả 🏆';
+            } else {
+                document.querySelector('.next-btn').textContent = 'Câu tiếp theo ➡️';
+            }
+        }
+
+        // Create sparkle effect
+        function createSparkles(element) {
+            const rect = element.getBoundingClientRect();
+            for (let i = 0; i < 10; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.style.cssText = `
+                    position: fixed;
+                    left: ${rect.left + Math.random() * rect.width}px;
+                    top: ${rect.top + Math.random() * rect.height}px;
+                    width: 10px;
+                    height: 10px;
+                    background: ${['#FFD700', '#FF6B6B', '#4ECDC4', '#A8E6CF'][Math.floor(Math.random() * 4)]};
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 1000;
+                    animation: sparkle 0.6s ease forwards;
+                `;
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 600);
+            }
+        }
+
+        // Add sparkle animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes sparkle {
+                0% { transform: scale(1) translate(0, 0); opacity: 1; }
+                100% { transform: scale(0) translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Next question
+        function nextQuestion() {
+            playSound('click');
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        // Show results
+        function showResults() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('resultsSection').classList.add('active');
+
+            const percentage = (correctAnswers / questions.length) * 100;
+            document.getElementById('finalScore').textContent = `${correctAnswers}/${questions.length}`;
+            // Display completion time
+            const now = new Date();
+            // Format date
+            const dateOptions = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const dateStr = now.toLocaleDateString('vi-VN', dateOptions);
+            const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('completionTime').textContent = `🕐 Hoàn thành lúc: ${timeStr} - ${dateStr}`;
+
+            // Update progress to 100%
+            document.getElementById('progressFill').style.width = '100%';
+
+            // Stars and messages based on score
+            let stars, message, trophy;
+            if (percentage >= 90) {
+                stars = '⭐⭐⭐⭐⭐';
+                message = '🎉 Xuất sắc! Bạn là ngôi sao sáng nhất!';
+                trophy = '🏆';
+            } else if (percentage >= 70) {
+                stars = '⭐⭐⭐⭐';
+                message = '👏 Tuyệt vời! Chỉ cần cố gắng thêm một chút!';
+                trophy = '🥇';
+            } else if (percentage >= 50) {
+                stars = '⭐⭐⭐';
+                message = '💪 Khá tốt! Tiếp tục luyện tập nhé!';
+                trophy = '🥈';
+            } else if (percentage >= 30) {
+                stars = '⭐⭐';
+                message = '📚 Cần ôn tập thêm! Đừng bỏ cuộc!';
+                trophy = '🥉';
+            } else {
+                stars = '⭐';
+                message = '🌱 Hãy học thêm và thử lại nhé!';
+                trophy = '🎯';
+            }
+
+            document.getElementById('stars').textContent = stars;
+            document.getElementById('scoreMessage').textContent = message;
+            document.getElementById('trophyIcon').textContent = trophy;
+
+            playSound('complete');
+            createConfetti();
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#FFD700', '#FF6B6B', '#4ECDC4'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = (Math.random() * 10 + 5) + 'px';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 50);
+            }
+        }
+
+        // Restart game
+        function restartGame() {
+            playSound('click');
+            currentQuestionIndex = 0;
+            score = 0;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            showQuestion();
+        }
+
+        // Initialize audio on any click
+        document.body.addEventListener('click', initAudio, { once: true });
+    </script>
+</body>
+
+</html>
