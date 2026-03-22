@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mật mã Tháp Toán học - Giải mã Đề số 1</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #9013FE;
+            --accent: #F5A623;
+            --success: #7ED321;
+            --danger: #D0021B;
+            --ice-1: #E0F2FE;
+            --ice-2: #BAE6FD;
+            --ice-3: #7DD3FC;
+            --fire: #FF7E5F;
+            --bg-color: #0F172A;
+            --text: #F8FAFC;
+            --text-dark: #1E293B;
+            --panel-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-color);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(circle at center, #1E1B4B 0%, #020617 100%);
+            transition: background 2s ease;
+        }
+
+        /* Tháp băng giá background */
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 20,90 80,90" fill="rgba(125, 211, 252, 0.1)"/></svg>') center/cover;
+            opacity: 0.5;
+            transition: all 1s;
+        }
+
+        .bg-layer.melting {
+            background: radial-gradient(circle, rgba(255, 126, 95, 0.2) 0%, rgba(2, 6, 23, 1) 100%);
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            max-height: 700px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(125, 211, 252, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--ice-3);
+            transition: border-color 1s, box-shadow 1s;
+        }
+
+        #game-container.warm {
+            border-color: var(--fire);
+            box-shadow: 0 0 40px rgba(255, 126, 95, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        header {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .title {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.5rem;
+            color: var(--ice-3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+            transition: color 1s;
+        }
+
+        .title.warm {
+            color: var(--fire);
+        }
+
+        .subtitle-eec {
+            font-size: 0.95rem;
+            color: #FFD700;
+            margin-top: 8px;
+            font-weight: 800;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-score {
+            color: var(--accent);
+        }
+
+        .stat-fire {
+            color: var(--fire);
+        }
+
+        .screen {
+            flex: 1;
+            padding: 30px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .btn {
+            font-family: 'Baloo 2', cursive;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.2);
+        }
+
+        .btn-fire {
+            background: linear-gradient(135deg, #FF512F, #DD2476);
+            color: white;
+        }
+
+        .btn-fire:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 20px var(--fire);
+        }
+
+        /* Start Screen */
+        .story-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 700px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid var(--ice-2);
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .ice-text {
+            color: var(--ice-3);
+            font-family: 'Baloo 2', cursive;
+            font-weight: normal;
+        }
+
+        /* Map Screen */
+        .map-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .level-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--ice-2);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .level-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(1);
+        }
+
+        .level-card.locked::after {
+            content: "\f023";
+            font-family: 'FontAwesome';
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .level-card.completed {
+            border-color: var(--success);
+            background: rgba(126, 211, 33, 0.1);
+        }
+
+        .level-icon {
+            font-size: 3rem;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+
+        .level-info h3 {
+            font-family: 'Baloo 2', cursive;
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .level-info p {
+            opacity: 0.8;
+        }
+
+        /* Question Screen */
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ice-3), var(--primary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-box {
+            background: var(--panel-bg);
+            color: var(--text-dark);
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .subtitle-eec {
+                font-size: 0.8rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .stats {
+                align-self: flex-end;
+            }
+
+            .title {
+                font-size: 1.2rem;
+            }
+
+            .question-box {
+                font-size: 1.2rem;
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem !important;
+            }
+
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .equation {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--ice-3);
+            transform: scale(1.02);
+        }
+
+        .option-btn.correct {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            background: var(--danger);
+            border-color: var(--danger);
+            color: white;
+            animation: shake 0.4s;
+        }
+
+        .option-letter {
+            background: rgba(0, 0, 0, 0.2);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            font-family: 'Baloo 2', cursive;
+        }
+
+        /* Tự luận Screen */
+        .tuluan-container {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tuluan-box {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tuluan-box h4 {
+            color: var(--primary);
+            font-family: 'Baloo 2', cursive;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tuluan-input {
+            padding: 10px 15px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: 'Nunito', sans-serif;
+            font-weight: bold;
+            width: 120px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .tuluan-input:focus {
+            border-color: var(--primary);
+        }
+
+        .tuluan-input.correct {
+            border-color: var(--success);
+            background: #f0fdf4;
+            color: var(--success);
+        }
+
+        .tuluan-input.wrong {
+            border-color: var(--danger);
+            background: #fef2f2;
+            color: var(--danger);
+            animation: shake 0.4s;
+        }
+
+        /* Modals and notifications */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal {
+            background: white;
+            color: var(--text-dark);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.active {
+            transform: scale(1);
+        }
+
+        .modal h2 {
+            font-family: 'Baloo 2', cursive;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal.reward h2 {
+            color: var(--accent);
+        }
+
+        .modal.reward .modal-icon {
+            color: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .inventory {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .inv-item {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .inv-item.active {
+            background: var(--accent);
+            color: white;
+            border-color: white;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .inv-item:hover .tooltip {
+            display: block;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            display: none;
+            pointer-events: none;
+        }
+
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .fraction>span {
+            display: block;
+            padding: 0.1em;
+        }
+
+        .fraction span.top {
+            border-bottom: 2px solid var(--text-dark);
+        }
+
+        .equation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-family: 'Baloo 2', cursive;
+            margin: 5px 0;
+            padding: 5px 10px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-layer" id="bgLayer"></div>
+
+    <div id="game-container">
+        <header>
+            <div style="display: flex; flex-direction: column;">
+                <div class="title" id="mainTitle"><i class="fa-solid fa-icicles"></i> Tháp Băng Giá</div>
+                <div class="subtitle-eec"><i class="fa-solid fa-school"></i> Hệ thống lớp học theo yêu cầu
+                    EEC-0829120482<br><i class="fa-solid fa-location-dot"></i> Số 18 ngõ 43 đường Cầu Cốc, Tây Mỗ, Hà
+                    Nội</div>
+            </div>
+            <div class="stats">
+                <div class="stat-item"><i class="fa-solid fa-fire stat-fire"></i> Lửa: <span id="score">0</span></div>
+            </div>
+        </header>
+
+        <!-- Màn hình bắt đầu -->
+        <div class="screen active" id="screen-start">
+            <h1
+                style="font-family: 'Baloo 2', cursive; font-size: 3rem; color: var(--ice-2); margin-bottom: 10px; text-shadow: 0 0 10px rgba(125,211,252,0.5); text-align: center;">
+                MẬT MÃ THÁP TOÁN HỌC</h1>
+            <h2 style="color: var(--accent); margin-bottom: 30px;">Giải mã Đề Số 1</h2>
+
+            <div class="story-text">
+                Vương quốc Toán học đã bị đóng băng bởi một <span class="ice-text">Tòa Tháp Băng Giá</span>.<br><br>
+                Bạn, một <span class="highlight">Nhà Giải Mã Nhí</span> tài năng, phải sử dụng kiến thức Toán lớp 5 của
+                mình để trả lời đúng các câu hỏi. Mỗi câu trả lời đúng sẽ tạo ra <span class="stat-fire">Ngọn Lửa Nhiệt
+                    Huyết</span> làm tan chảy băng giá và giải cứu vương quốc!<br><br>
+                Hãy dũng cảm vượt qua 3 cửa ải thử thách!
+            </div>
+
+            <button class="btn btn-primary" style="font-size: 1.5rem; padding: 15px 50px;" onclick="startGame()">Bắt đầu
+                Hành Trình</button>
+        </div>
+
+        <!-- Màn hình bản đồ -->
+        <div class="screen" id="screen-map">
+            <h2 style="font-family: 'Baloo 2', cursive; font-size: 2rem; margin-bottom: 30px; color: var(--ice-2);">
+                Bản Đồ Hành Trình</h2>
+
+            <div class="map-container">
+                <div class="level-card" id="level-1" onclick="startLevel(1)">
+                    <div class="level-icon" style="color: #4A90E2;"><i class="fa-solid fa-chess-rook"></i></div>
+                    <div class="level-info">
+                        <h3>Cửa ải 1: Cung điện Thập phân</h3>
+                        <p>5 mã số trắc nghiệm đầu tiên</p>
+                    </div>
+                </div>
+
+                <div class="level-card locked" id="level-2" onclick="startLevel(2)">
+                    <div class="level-icon" style="color: #9013FE;"><i class="fa-solid fa-cube"></i></div>
+                    <div class="level-info">
+                        <h3>Cửa ải 2: Mê cung Hình khối</h3>
+                        <p>Khám phá bí ẩn của các khối không gian</p>
+                    </div>
+                </div>
+
+                <div class="level-card locked" id="level-3" onclick="startLevel(3)">
+                    <div class="level-icon" style="color: #F5A623;"><i class="fa-solid fa-mountain"></i></div>
+                    <div class="level-info">
+                        <h3>Cửa ải 3: Đỉnh núi Tự luận</h3>
+                        <p>Đương đầu với thử thách cao nhất</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Màn hình Trắc nghiệm -->
+        <div class="screen" id="screen-mcq">
+            <h2 id="mcq-title" style="font-family: 'Baloo 2', cursive; margin-bottom: 10px; color: var(--ice-2);">
+                Cửa ải 1</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="mcq-progress"></div>
+            </div>
+
+            <div class="question-box" id="mcq-question">
+                Đang tải câu hỏi...
+            </div>
+
+            <div class="options-grid" id="mcq-options">
+                <!-- Options generated by JS -->
+            </div>
+
+            <button class="btn btn-primary" id="btn-next-mcq" style="margin-top: 20px; display: none;"
+                onclick="nextQuestion()">Tiếp tục <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- Màn hình Tự luận -->
+        <div class="screen" id="screen-tuluan">
+            <h2 style="font-family: 'Baloo 2', cursive; margin-bottom: 10px; color: var(--accent);">Đỉnh Núi Tự Luận
+            </h2>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%; background: var(--accent);"></div>
+            </div>
+
+            <div class="tuluan-container" id="tl-container">
+                <!-- Task 1 -->
+                <div class="tuluan-box"
+                    data-hint="Nhiệm vụ 1: Chú ý đặt tính thẳng cột dấu phẩy. Phép nhân cần đếm đúng số chữ số thập phân.">
+                    <h4>Nhiệm vụ 1: Mã PIN Phép Tính</h4>
+                    <p>Thực hiện các phép tính sau và nhập kết quả để mở khóa cổng:</p>
+                    <div class="input-group">
+                        <div class="equation">257,36 + 48,729 = <input type="number" step="0.001"
+                                class="tuluan-input tl-ans" data-ans="306.089"></div>
+                        <div class="equation">95,482 - 37,648 = <input type="number" step="0.001"
+                                class="tuluan-input tl-ans" data-ans="57.834"></div>
+                        <div class="equation">4,75 × 3,82 = <input type="number" step="0.001"
+                                class="tuluan-input tl-ans" data-ans="18.145"></div>
+                        <div class="equation">56,28 : 4,2 = <input type="number" step="0.01" class="tuluan-input tl-ans"
+                                data-ans="13.4"></div>
+                    </div>
+                </div>
+
+                <!-- Task 2 -->
+                <div class="tuluan-box"
+                    data-hint="Nhiệm vụ 2: Hãy làm theo các bước sau nhé!<br>1. Tìm tổng số gạo mới: Sau khi kho A chuyển đi 20 tấn, tổng số gạo hai kho là 240 - 20 = 220 (tấn).<br>2. Tìm tổng số phần: Kho A bằng 2/3 kho B, tức là kho A 2 phần, kho B 3 phần. Tổng số phần bằng nhau là 2 + 3 = 5 (phần).<br>3. Tính số gạo lúc sau: Kho B = (220 : 5) × 3 = 132 (tấn).<br>4. Tính số gạo lúc đầu: Kho B không đổi nên vẫn là 132 tấn, còn kho A lúc đầu là 240 - 132 = ?">
+                    <h4>Nhiệm vụ 2: Bài toán Kho gạo</h4>
+                    <p>Hai kho chứa 240 tấn gạo. Sau khi kho A chuyển đi 20 tấn thì số gạo còn lại của kho A bằng <span
+                            class="fraction"><span class="top">2</span><span>3</span></span> số gạo của kho B.</p>
+                    <p><em>Gợi ý: Tổng số gạo sau khi chuyển là 220 tấn. Áp dụng toán Tổng-Tỉ!</em></p>
+                    <div class="input-group">
+                        <span>Kho A lúc đầu (tấn):</span> <input type="number" class="tuluan-input tl-ans"
+                            data-ans="108">
+                        <span>Kho B lúc đầu (tấn):</span> <input type="number" class="tuluan-input tl-ans"
+                            data-ans="132">
+                    </div>
+                </div>
+
+                <!-- Task 3 -->
+                <div class="tuluan-box"
+                    data-hint="Nhiệm vụ 3: Cách tính nhanh biểu thức:<br>1. Nhóm theo cặp: (125 × 36 + 125 × 64) + (75 × 36 + 75 × 64)<br>2. Đặt thừa số chung mỗi nhóm: 125 × (36 + 64) + 75 × (36 + 64)<br>3. Tính tổng trong ngoặc: 125 × 100 + 75 × 100<br>4. Tiếp tục đặt thừa số chung: 100 × (125 + 75) = 100 × 200 = ?">
+                    <h4>Nhiệm vụ 3: Tính nhanh Thần tốc</h4>
+                    <p>Tính bằng cách thuận tiện nhất: <strong>125 × 36 + 125 × 64 + 75 × 36 + 75 × 64</strong></p>
+                    <div class="input-group">
+                        <span>Kết quả:</span> <input type="number" class="tuluan-input tl-ans" data-ans="20000">
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-fire" style="margin-top: 30px;" onclick="checkTuluan()">Giải mã Đỉnh Núi <i
+                    class="fa-solid fa-key"></i></button>
+        </div>
+
+        <!-- Màn hình Chiến Thắng -->
+        <div class="screen" id="screen-victory">
+            <h1
+                style="font-family: 'Baloo 2', cursive; font-size: 3.5rem; color: var(--fire); text-shadow: 0 0 20px rgba(255,126,95,0.8); margin-bottom: 20px; text-align: center;">
+                VƯƠNG QUỐC ĐÃ SƯỞI ẤM!</h1>
+            <div style="font-size: 5rem; margin-bottom: 20px;"><i class="fa-solid fa-sun"
+                    style="color: #FFD700; text-shadow: 0 0 30px #FFD700;"></i></div>
+            <p style="font-size: 1.3rem; text-align: center; max-width: 600px; margin-bottom: 30px; line-height: 1.6;">
+                Chúc mừng Nhà Giải Mã Nhí! Những ngọn lửa nhiệt huyết của em đã làm tan chảy hoàn toàn Tòa Tháp Băng
+                Giá.<br><br>
+                Em đã giải xuất sắc toàn bộ Đề Số 1!
+            </p>
+            <button class="btn btn-primary" onclick="location.reload()">Chơi lại từ đầu</button>
+        </div>
+
+        <div class="inventory">
+            <div class="inv-item" id="inv-badge"><i class="fa-solid fa-medal"></i>
+                <div class="tooltip">Huy hiệu Đơn vị</div>
+            </div>
+            <div class="inv-item" id="inv-shield"><i class="fa-solid fa-shield-halved"></i>
+                <div class="tooltip">Khiên Công thức</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modals -->
+    <div class="overlay" id="modal-overlay">
+        <div class="modal" id="modal-box">
+            <div class="modal-icon" id="modal-icon"><i class="fa-regular fa-face-frown"></i></div>
+            <h2 id="modal-title">Chưa chính xác</h2>
+            <p id="modal-desc">Hãy thử đọc lại gợi ý nhé!</p>
+            <button class="btn btn-primary" id="modal-btn" onclick="closeModal()">Thử lại</button>
+        </div>
+    </div>
+
+    <!-- Audio Effects -->
+    <script>
+        // Audio Context for sound effects
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        // Mở khoá Audio Context trên iOS/Android khi người chơi chạm màn hình lần đầu
+        function unlockAudio() {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            // Tạo một âm thanh im lặng (silent sound) để đánh thức context
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            gainNode.gain.value = 0;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start(0);
+            oscillator.stop(0.001);
+
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('click', unlockAudio);
+        }
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('click', unlockAudio, { once: true });
+
+        function playTone(frequency, type, duration, vol = 0.1) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.value = frequency;
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
+
+        const sfx = {
+            correct: () => {
+                playTone(440, 'sine', 0.1);
+                setTimeout(() => playTone(660, 'sine', 0.2), 100);
+            },
+            wrong: () => {
+                playTone(300, 'sawtooth', 0.3);
+                setTimeout(() => playTone(200, 'sawtooth', 0.3), 150);
+            },
+            click: () => playTone(500, 'sine', 0.05, 0.05),
+            reward: () => {
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    setTimeout(() => playTone(freq, 'sine', 0.2, 0.1), i * 150);
+                });
+            },
+            victory: () => {
+                const notes = [440, 554.37, 659.25, 880, 659.25, 880, 1108.73];
+                notes.forEach((freq, i) => {
+                    setTimeout(() => playTone(freq, 'square', 0.3, 0.05), i * 200);
+                });
+            }
+        };
+
+        // Game Data
+        const DB = {
+            level1: [
+                {
+                    q: `Phân số <div class="fraction"><span class="top">9</span><span>100</span></div> biến hình thành tỉ số phần trăm nào?`,
+                    opts: ["9%", "90%", "0,9%", "900%"],
+                    ans: 0,
+                    hint: "Chỉ cần lấy tử số khi mẫu số đã là 100 nhé. Ký hiệu % thay cho /100."
+                },
+                {
+                    q: "Truy tìm 15% của số 40.",
+                    opts: ["6", "60", "15", "4"],
+                    ans: 0,
+                    hint: "Muốn tìm phần trăm của 1 số, ta lấy số đó nhân với số phần trăm rồi chia 100 (40 x 15 : 100)."
+                },
+                {
+                    q: "Cân bằng thể tích: 8m³ 7dm³ = ... m³",
+                    opts: ["8,7", "8,07", "8,007", "8,0007"],
+                    ans: 2,
+                    hint: "Nhớ lại bảng đơn vị đo thể tích: 1m³ = 1000dm³. Vậy 7dm³ = 0,007m³.",
+                    reward: "badge"
+                },
+                {
+                    q: "Bản đồ khu KCN tỉ lệ 1:50.000. Tổng dài và rộng là 20km. Dài gấp 4 lần rộng. Chiều dài trên bản đồ là bao nhiêu cm?",
+                    opts: ["16 cm", "32 cm", "160 cm", "320 cm"],
+                    ans: 1,
+                    hint: "Logic: Dài gấp 4 rộng (tổng 5 phần) -> Chiều dài thực = 16km = 1.600.000cm. Chia tỉ lệ 50.000."
+                },
+                {
+                    q: `Hiệu của hai số là 156, tỉ số của chúng là <div class="fraction"><span class="top">7</span><span>5</span></div>. Hai số đó là:`,
+                    opts: ["390 và 546", "390 và 234", "156 và 312", "546 và 702"],
+                    ans: 0,
+                    hint: "Giải toán Hiệu-Tỉ: Hiệu số phần bằng nhau là 7 - 5 = 2 phần. Giá trị 1 phần là 156 : 2 = 78."
+                }
+            ],
+            level2: [
+                {
+                    q: "Hình lập phương có cạnh 8cm. Diện tích toàn phần là bao nhiêu?",
+                    opts: ["256 cm²", "384 cm²", "512 cm²", "64 cm²"],
+                    ans: 1,
+                    hint: "Diên tích toàn phần hình lập phương = (cạnh x cạnh) x 6.",
+                    reward: "shield",
+                    formula: "S(toàn phần) = a × a × 6"
+                },
+                {
+                    q: "Diện tích xung quanh của hình hộp chữ nhật có chiều dài 40dm, rộng 30dm và cao 25dm là:",
+                    opts: ["3500 dm²", "4000 dm²", "7000 dm²", "1750 dm²"],
+                    ans: 0,
+                    hint: "S xung quanh = Chu vi đáy x Chiều cao = (dài + rộng) x 2 x cao.",
+                    formula: "S(xq) = (a + b) × 2 × h"
+                },
+                {
+                    q: "Tính thể tích hình hộp chữ nhật có kích thước: dài 5,2cm, rộng 4cm, cao 5,5cm.",
+                    opts: ["114,4 cm³", "101,2 cm³", "11,44 cm³", "1144 cm³"],
+                    ans: 0,
+                    hint: "Thể tích = Dài x Rộng x Cao.",
+                    formula: "V = a × b × h"
+                },
+                {
+                    q: "Tìm bán kính của hình tròn có diện tích 113,04 cm².",
+                    opts: ["36 cm", "6 cm", "12 cm", "18 cm"],
+                    ans: 1,
+                    hint: "Diện tích = r x r x 3,14 => r x r = 113,04 : 3,14 = 36. Vậy r = ?"
+                },
+                {
+                    q: "Tìm S đáy hình hộp chữ nhật khi biết S xung quanh là 26m², chiều dài gấp rưỡi chiều rộng và chiều cao là 2m.",
+                    opts: ["10,14 m²", "10,4 m²", "5,07 m²", "20,28 m²"],
+                    ans: 0,
+                    hint: "Chu vi đáy = 26 : 2 = 13m. Tổng dài+rộng = 6,5m. Dài gấp rưỡi(3/2) rộng => tìm dài, rộng rồi tính S."
+                }
+            ]
+        };
+
+        // Game State
+        let currentLevel = 1;
+        let currentQIndex = 0;
+        let score = 0;
+        let unlockedLevels = [1];
+        let currentQuestions = [];
+
+        // Functions
+        function playSound(type) { sfx[type](); }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function startGame() {
+            playSound('click');
+            showScreen('screen-map');
+        }
+
+        function updateMap() {
+            for (let i = 1; i <= 3; i++) {
+                const card = document.getElementById(`level-${i}`);
+                if (unlockedLevels.includes(i)) {
+                    card.classList.remove('locked');
+                }
+                if (currentLevel > i && unlockedLevels.includes(currentLevel)) {
+                    card.classList.add('completed');
+                }
+            }
+        }
+
+        function startLevel(lev) {
+            playSound('click');
+            if (!unlockedLevels.includes(lev)) return;
+
+            if (lev === 3) {
+                showScreen('screen-tuluan');
+                return;
+            }
+
+            currentLevel = lev;
+            currentQIndex = 0;
+            currentQuestions = lev === 1 ? DB.level1 : DB.level2;
+
+            document.getElementById('mcq-title').innerHTML = lev === 1 ? 'Cửa ải 1: Cung điện Thập phân' : 'Cửa ải 2: Mê cung Hình khối';
+            showScreen('screen-mcq');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const qData = currentQuestions[currentQIndex];
+            document.getElementById('mcq-question').innerHTML = qData.q;
+            document.getElementById('btn-next-mcq').style.display = 'none';
+
+            const progress = (currentQIndex / currentQuestions.length) * 100;
+            document.getElementById('mcq-progress').style.width = progress + '%';
+
+            const optsDiv = document.getElementById('mcq-options');
+            optsDiv.innerHTML = '';
+
+            const letters = ['A', 'B', 'C', 'D'];
+            qData.opts.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<div class="option-letter">${letters[idx]}</div> <div>${opt}</div>`;
+                btn.onclick = () => checkAnswer(idx, btn, qData);
+                optsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIdx, btn, qData) {
+            // Disable all buttons
+            document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'none');
+
+            if (selectedIdx === qData.ans) {
+                playSound('correct');
+                btn.classList.add('correct');
+                addScore();
+
+                if (qData.reward) grantReward(qData.reward, qData.formula);
+                else showModal('Chính xác!', 'Khí nóng tỏa ra, băng đang bắt đầu tan!', 'success', 'fa-face-smile-beam');
+
+                document.getElementById('btn-next-mcq').style.display = 'block';
+            } else {
+                playSound('wrong');
+                btn.classList.add('wrong');
+                showModal('Oh không...', 'Gợi ý: ' + qData.hint, 'error', 'fa-face-rolling-eyes');
+
+                // Allow replay after modal
+                setTimeout(() => {
+                    document.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents = 'auto');
+                    btn.classList.remove('wrong');
+                }, 500);
+            }
+        }
+
+        function addScore() {
+            score += 10;
+            document.getElementById('score').innerText = score;
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currentQIndex++;
+            if (currentQIndex >= currentQuestions.length) {
+                levelComplete();
+            } else {
+                loadQuestion();
+            }
+        }
+
+        function levelComplete() {
+            playSound('reward');
+            currentLevel++;
+            unlockedLevels.push(currentLevel);
+            updateMap();
+            showModal('Hoàn thành Cửa ải!', 'Bạn đã mở khóa khu vực tiếp theo!', 'success', 'fa-unlock-keyhole');
+            if (currentLevel > 1) {
+                document.getElementById('game-container').classList.add('warm');
+                document.getElementById('mainTitle').classList.add('warm');
+                document.getElementById('mainTitle').innerHTML = '<i class="fa-solid fa-fire"></i> Tháp Đang Tan...';
+                document.getElementById('bgLayer').classList.add('melting');
+            }
+            showScreen('screen-map');
+        }
+
+        // Tự luận logic
+        function checkTuluan() {
+            const boxes = document.querySelectorAll('.tuluan-box');
+            let allCorrect = true;
+            let hints = [];
+
+            boxes.forEach(box => {
+                const inputs = box.querySelectorAll('.tl-ans');
+                if (inputs.length === 0) return;
+
+                let boxCorrect = true;
+                inputs.forEach(input => {
+                    const expected = parseFloat(input.dataset.ans);
+                    const val = parseFloat(input.value.replace(',', '.')); // support vi comma
+
+                    if (val === expected) {
+                        input.classList.add('correct');
+                        input.classList.remove('wrong');
+                    } else {
+                        input.classList.add('wrong');
+                        input.classList.remove('correct');
+                        boxCorrect = false;
+                        allCorrect = false;
+                    }
+                });
+
+                if (!boxCorrect && box.dataset.hint) {
+                    hints.push(box.dataset.hint);
+                }
+            });
+
+            if (allCorrect) {
+                playSound('victory');
+                showScreen('screen-victory');
+            } else {
+                playSound('wrong');
+                let hintText = hints.length > 0 ? "<div style='text-align:left; font-size:1rem; line-height:1.5;'>" + hints.map(h => "💡 " + h).join("<br><br>") + "</div>" : "Có đáp án chưa chính xác. Hãy tính toán lại cẩn thận nhé!";
+                showModal('Chưa mở được khóa', hintText, 'error', 'fa-lock');
+                setTimeout(() => {
+                    document.querySelectorAll('.tl-ans.wrong').forEach(i => i.classList.remove('wrong'));
+                }, 1000);
+            }
+        }
+
+        function grantReward(type, formula) {
+            playSound('reward');
+            if (type === 'badge') {
+                document.getElementById('inv-badge').classList.add('active');
+                showModal('Tặng Huy Hiện!', 'Bạn nhận được Huy hiệu Chuyên gia Đơn vị!', 'reward', 'fa-medal');
+            } else if (type === 'shield') {
+                document.getElementById('inv-shield').classList.add('active');
+                let desc = 'Bạn nhận được Khiên Công thức!<br><br><strong style="color:var(--primary); font-size:1.2rem;">' + formula + '</strong>';
+                showModal('Vật phẩm mới!', desc, 'reward', 'fa-shield-halved');
+            }
+        }
+
+        // Modal Logic
+        function showModal(title, desc, type, iconClass) {
+            const modal = document.getElementById('modal-box');
+            document.getElementById('modal-title').innerHTML = title;
+            document.getElementById('modal-desc').innerHTML = desc;
+
+            const iconEl = document.getElementById('modal-icon');
+            iconEl.innerHTML = `<i class="fa-solid ${iconClass}"></i>`;
+            iconEl.style.color = type === 'success' ? 'var(--success)' : (type === 'reward' ? 'var(--accent)' : 'var(--danger)');
+
+            modal.className = 'modal active';
+            if (type === 'reward') modal.classList.add('reward');
+
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal() {
+            playSound('click');
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+    </script>
+</body>
+
+</html>
