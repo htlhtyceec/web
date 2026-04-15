@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lý thuyết cần chuẩn bị làm đề 1</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Space Background animations -->
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+    
+    <div class="app-container">
+        <!-- Start Screen -->
+        <main id="start-screen" class="screen active glow-box glass-panel">
+            <div class="logo">🚀</div>
+            <h1 class="title">Lý thuyết cần chuẩn bị làm đề 1</h1>
+            <p class="subtitle">Khám phá Vũ trụ Toán học</p>
+            <button id="start-btn" class="glow-on-hover primary-btn">BẮT ĐẦU</button>
+        </main>
+
+        <!-- Question Screen -->
+        <main id="question-screen" class="screen glass-panel">
+            <header>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="stats">
+                    <span id="question-counter">Câu 1/20</span>
+                    <span id="score-counter">🌟 Điểm: 0</span>
+                </div>
+            </header>
+            
+            <div class="question-container">
+                <h2 id="question-text">Câu hỏi sẽ hiển thị ở đây...</h2>
+            </div>
+
+            <div class="options-grid" id="options-grid">
+                <!-- Options will be dynamically injected here -->
+            </div>
+            
+            <button id="next-btn" class="glow-on-hover primary-btn hidden" style="margin-top: 2rem;">CÂU TIẾP THEO</button>
+        </main>
+
+        <!-- Result Screen -->
+        <main id="result-screen" class="screen glass-panel text-center">
+            <div class="logo-large">✨</div>
+            <h1 class="title">Hoàn thành nhiệm vụ!</h1>
+            <div class="score-display">
+                <p>Khám phá trọn vẹn dải ngân hà với số điểm:</p>
+                <h2 id="final-score">0 / 20</h2>
+                <p id="feedback-msg" class="feedback-msg">Tuyệt vời!</p>
+            </div>
+            <button id="restart-btn" class="glow-on-hover primary-btn margin-top">CHƠI LẠI TRẠM KHÔNG GIAN</button>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="copyright">Hệ thống lớp học theo yêu cầu EEC- 0829120482- số 18 đường Cầu Cốc Tây Mỗ</div>
+    </footer>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

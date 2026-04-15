@@ -1,0 +1,382 @@
+/* Base resets and fonts */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Baloo 2', cursive, sans-serif;
+}
+
+body {
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* App container - main UI */
+.app-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    padding: 2.5rem;
+    width: 100%;
+    margin-bottom: 40px;
+    /* Leave space for footer */
+}
+
+/* Screens */
+.screen {
+    display: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    text-align: center;
+}
+
+.screen.active {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Typography styles */
+.title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #b0c4de;
+    margin-bottom: 2rem;
+}
+
+/* Emojis as Logos */
+.logo {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.logo-large {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+/* Buttons with glowing effect */
+.primary-btn {
+    border: none;
+    outline: none;
+    color: #fff;
+    background: linear-gradient(45deg, #FF512F, #DD2476);
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 50px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 15px 40px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(221, 36, 118, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.primary-btn:active {
+    transform: scale(0.95);
+}
+
+.primary-btn.hidden {
+    display: none !important;
+}
+
+.margin-top {
+    margin-top: 2rem;
+}
+
+/* Progress and Stats */
+header {
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 5%;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffd700;
+}
+
+/* Questions and Options */
+.question-container {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+#question-text {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    color: #fff;
+    font-weight: 600;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.option-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 15px 20px;
+    color: #fff;
+    font-size: 1.2rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.option-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.option-btn.correct {
+    background: rgba(46, 204, 113, 0.2);
+    border-color: #2ecc71;
+    color: #2ecc71;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.3);
+}
+
+.option-btn.wrong {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: #e74c3c;
+    color: #ff6b6b;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
+}
+
+.option-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.option-btn:disabled:hover {
+    transform: none;
+}
+
+/* Result screen contents */
+.score-display p {
+    font-size: 1.2rem;
+    color: #b0c4de;
+}
+
+#final-score {
+    font-size: 4rem;
+    font-weight: 800;
+    color: #ffd700;
+    margin: 1rem 0;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.feedback-msg {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #4facfe;
+    margin-bottom: 1.5rem;
+}
+
+/* Footer Styling */
+footer {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    border-top: 1px solid rgba(255, 215, 0, 0.4);
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.copyright {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background: rgba(255, 215, 0, 0.15);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    letter-spacing: 0.5px;
+    animation: copyrightPulse 3s infinite;
+}
+
+@keyframes copyrightPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .glass-panel {
+        padding: 1.5rem;
+        border-radius: 20px;
+        margin-bottom: 60px;
+        /* More room for footer */
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    #question-text {
+        font-size: 1.3rem;
+    }
+
+    .option-btn {
+        font-size: 1.1rem;
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 4rem;
+    }
+
+    footer {
+        font-size: 0.8rem;
+        padding: 10px;
+    }
+}
+
+/* ===== STAR BACKGROUND EFFECTS ===== */
+/* Thanks to visual styling techniques for CSS space backgrounds */
+#stars,
+#stars2,
+#stars3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@function multiple-box-shadow ($n) {
+    $value: '#{random(2000)}px #{random(2000)}px #FFF';
+
+    @for $i from 2 through $n {
+        $value: '#{$value}, #{random(2000)}px #{random(2000)}px #FFF';
+    }
+
+    @return unquote($value);
+}
+
+/* We will inject shadows via JS to avoid SCSS compilation in this simple HTML/CSS project */
+.star-layer {
+    position: fixed;
+    border-radius: 50%;
+    background: transparent;
+    pointer-events: none;
+}
