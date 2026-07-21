@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luyện thi Toán tiếng Anh lớp 5 lên 6</title>
+  <style>
+    :root{
+      --primary:#1f6f8b;
+      --primary-dark:#164f64;
+      --accent:#f0a202;
+      --ok:#15803d;
+      --bad:#b91c1c;
+      --bg:#f4f8fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#64748b;
+      --border:#d7e2ea;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      color:var(--text);
+      background:linear-gradient(180deg,#eaf5fa 0,#f8fbfd 220px,#f4f8fb 100%);
+      line-height:1.55;
+    }
+    .app{
+      width:min(1120px, calc(100% - 24px));
+      margin:0 auto;
+      padding:22px 0 50px;
+    }
+    header{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 12px 30px rgba(31,111,139,.10);
+    }
+    h1{
+      margin:0 0 8px;
+      color:var(--primary-dark);
+      font-size:clamp(24px,4vw,38px);
+      line-height:1.2;
+    }
+    .subtitle{margin:0;color:var(--muted)}
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+      align-items:center;
+    }
+    button, select{
+      font:inherit;
+    }
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:11px 16px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-secondary{background:#e8f2f7;color:var(--primary-dark)}
+    .btn-accent{background:var(--accent);color:#1f2937}
+    .btn-danger{background:#fee2e2;color:#991b1b}
+    select{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:700;
+      color:var(--primary-dark);
+    }
+    .score-board{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+    }
+    .score-cell{
+      background:#f8fbfd;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      text-align:center;
+      font-weight:700;
+    }
+    details{
+      margin-top:16px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fbfdff;
+      padding:10px 14px;
+    }
+    summary{cursor:pointer;font-weight:700;color:var(--primary-dark)}
+    .vocab-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px 18px;
+      margin-top:12px;
+    }
+    .vocab-grid div{
+      border-bottom:1px dashed #d5e2e8;
+      padding:5px 0;
+    }
+    .section{
+      margin-top:18px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:20px;
+      box-shadow:0 8px 22px rgba(15,23,42,.05);
+    }
+    .section h2{
+      margin:0 0 8px;
+      color:var(--primary-dark);
+    }
+    .preamble{
+      text-align:center;
+      font-weight:700;
+      font-size:18px;
+      margin-bottom:10px;
+    }
+    .chart-wrap{
+      width:100%;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
+      padding:8px;
+    }
+    canvas{display:block;width:100%;height:390px}
+    .question-list{
+      display:grid;
+      gap:16px;
+      margin-top:18px;
+    }
+    .question{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:18px;
+      background:#fff;
+      position:relative;
+    }
+    .question.correct{border-color:#86efac;background:#f0fdf4}
+    .question.wrong{border-color:#fecaca;background:#fff7f7}
+    .q-title{
+      margin:0 0 12px;
+      font-size:18px;
+      font-weight:700;
+    }
+    .q-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    .speak{
+      border:1px solid #bfd4df;
+      border-radius:10px;
+      background:#f2f8fb;
+      padding:6px 10px;
+      cursor:pointer;
+      color:var(--primary-dark);
+      font-weight:700;
+    }
+    .options{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+    }
+    .option{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid #dce6ec;
+      border-radius:12px;
+      padding:11px 12px;
+      cursor:pointer;
+      background:#fff;
+      transition:.15s ease;
+    }
+    .option:hover{border-color:#78a9bc;background:#f7fbfd}
+    .option input{margin-top:4px;transform:scale(1.15)}
+    .feedback{
+      display:none;
+      margin-top:12px;
+      padding:12px;
+      border-radius:11px;
+      background:#f8fafc;
+      border-left:4px solid var(--primary);
+    }
+    .feedback.show{display:block}
+    .feedback strong{color:var(--primary-dark)}
+    .submit-area{
+      position:sticky;
+      bottom:12px;
+      z-index:5;
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(8px);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+      box-shadow:0 8px 24px rgba(15,23,42,.10);
+    }
+    .result{
+      font-size:18px;
+      font-weight:800;
+      color:var(--primary-dark);
+    }
+    .notice{
+      margin-top:10px;
+      color:var(--bad);
+      font-weight:700;
+      text-align:center;
+      min-height:24px;
+    }
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      margin-top:18px;
+      font-size:14px;
+    }
+    @media (max-width:760px){
+      .score-board,.vocab-grid,.options{grid-template-columns:1fr}
+      canvas{height:310px}
+      .section{padding:14px}
+      .question{padding:14px}
+    }
+    @media print{
+      body{background:#fff}
+      header,.section{box-shadow:none}
+      .toolbar,.submit-area,.speak,.score-board,details{display:none!important}
+      .feedback{display:none!important}
+      .question{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>LUYỆN THI TOÁN TIẾNG ANH LỚP 5 LÊN 6</h1>
+    <p class="subtitle">3 đề tương tác • 10 câu/đề • Có biểu đồ, chấm điểm, giải thích và đọc câu hỏi bằng tiếng Anh</p>
+
+    <div class="toolbar">
+      <label for="testSelect"><strong>Chọn đề:</strong></label>
+      <select id="testSelect">
+        <option value="0">Đề luyện tập 1</option>
+        <option value="1">Đề luyện tập 2</option>
+        <option value="2">Đề luyện tập 3</option>
+      </select>
+      <button class="btn btn-secondary" id="printBtn">🖨️ In đề hiện tại</button>
+      <button class="btn btn-danger" id="clearScoresBtn">Xóa bảng điểm</button>
+    </div>
+
+    <div class="score-board" id="scoreBoard"></div>
+
+    <details>
+      <summary>Từ khóa Toán tiếng Anh cần nhớ</summary>
+      <div class="vocab-grid">
+        <div><b>shortest / least</b>: ít nhất</div>
+        <div><b>longest / greatest</b>: nhiều nhất</div>
+        <div><b>in total / altogether</b>: tổng cộng</div>
+        <div><b>how many more</b>: nhiều hơn bao nhiêu</div>
+        <div><b>diameter</b>: đường kính</div>
+        <div><b>circumference</b>: chu vi hình tròn</div>
+        <div><b>trapezium</b>: hình thang</div>
+        <div><b>lateral surface area</b>: diện tích xung quanh</div>
+        <div><b>cube</b>: hình lập phương</div>
+        <div><b>volume</b>: thể tích</div>
+        <div><b>probability</b>: xác suất</div>
+        <div><b>randomly</b>: ngẫu nhiên</div>
+      </div>
+    </details>
+  </header>
+
+  <section class="section">
+    <h2 id="testTitle"></h2>
+    <div class="preamble">
+      The amount of time four students studied is recorded in the chart below.<br>
+      Use this information to answer Questions 1–4.
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chart" aria-label="Biểu đồ thời gian học"></canvas>
+    </div>
+    <div class="question-list" id="questionList"></div>
+    <div class="notice" id="notice"></div>
+
+    <div class="submit-area">
+      <button class="btn btn-primary" id="submitBtn">Nộp bài và chấm điểm</button>
+      <button class="btn btn-accent" id="resetBtn">Làm lại đề này</button>
+      <span class="result" id="result"></span>
+    </div>
+  </section>
+
+  <p class="footer-note">Ứng dụng chạy trực tiếp trên trình duyệt và không cần kết nối Internet.</p>
+</div>
+
+<script>
+const tests = [
+  {
+    title: "ĐỀ LUYỆN TẬP 1",
+    chart:{
+      labels:["An","Binh","Chi","Dung"],
+      series:[
+        {name:"Monday", values:[2.5,3,2.5,3], color:"#3979b9"},
+        {name:"Wednesday", values:[3,2,4,2.5], color:"#c84d45"},
+        {name:"Friday", values:[4,2.5,2,2], color:"#8db84a"}
+      ]
+    },
+    questions:[
+      {
+        en:"Who studied the shortest amount of time on Wednesday?",
+        vi:"Ai học ít thời gian nhất vào thứ Tư?",
+        options:["An","Binh","Chi","Dung"], answer:1,
+        explanation:"On Wednesday: An = 3, Binh = 2, Chi = 4, Dung = 2.5 hours. The shortest time is 2 hours, so the answer is Binh."
+      },
+      {
+        en:"Which student studied the longest amount of time in total?",
+        vi:"Học sinh nào có tổng thời gian học nhiều nhất?",
+        options:["An","Binh","Chi","Dung"], answer:0,
+        explanation:"An: 2.5 + 3 + 4 = 9.5 hours. Binh = 7.5, Chi = 8.5, Dung = 7.5. The greatest total is 9.5 hours."
+      },
+      {
+        en:"How many hours longer did Chi study than Binh on Wednesday?",
+        vi:"Vào thứ Tư, Chi học nhiều hơn Binh bao nhiêu giờ?",
+        options:["1 hour","1.5 hours","2 hours","2.5 hours"], answer:2,
+        explanation:"Chi studied 4 hours and Binh studied 2 hours. Difference: 4 − 2 = 2 hours."
+      },
+      {
+        en:"How many hours did An and Dung study altogether?",
+        vi:"An và Dung đã học tổng cộng bao nhiêu giờ?",
+        options:["15 hours","16 hours","17 hours","18.5 hours"], answer:2,
+        explanation:"An studied 9.5 hours in total. Dung studied 7.5 hours. Altogether: 9.5 + 7.5 = 17 hours."
+      },
+      {
+        en:"A circle has a diameter of 15.4 cm. Find its circumference. Use π = 3.14.",
+        vi:"Hình tròn có đường kính 15,4 cm. Tính chu vi, lấy π = 3,14.",
+        options:["24.178 cm","48.356 cm","48.356 cm²","96.712 cm"], answer:1,
+        explanation:"Circumference C = π × d = 3.14 × 15.4 = 48.356 cm. Circumference uses cm, not cm²."
+      },
+      {
+        en:"In a trapezium, the height is 8 m and the average of the two bases is 12.6 m. Find its area.",
+        vi:"Hình thang có chiều cao 8 m và trung bình cộng hai đáy là 12,6 m. Tính diện tích.",
+        options:["50.4 m²","96.8 m²","100.8 m²","201.6 m²"], answer:2,
+        explanation:"Area = average of the two bases × height = 12.6 × 8 = 100.8 m²."
+      },
+      {
+        en:"A rectangular prism is 24.5 m long, 9.5 m wide and 6 m high. Find its lateral surface area.",
+        vi:"Hình hộp chữ nhật dài 24,5 m, rộng 9,5 m, cao 6 m. Tính diện tích xung quanh.",
+        options:["204 m²","408 m²","570.5 m²","873 m²"], answer:1,
+        explanation:"Lateral surface area = 2 × (length + width) × height = 2 × (24.5 + 9.5) × 6 = 408 m²."
+      },
+      {
+        en:"A cube has a volume of 125 cm³. What is its side length?",
+        vi:"Hình lập phương có thể tích 125 cm³. Cạnh dài bao nhiêu?",
+        options:["4 cm","5 cm","6 cm","25 cm"], answer:1,
+        explanation:"5 × 5 × 5 = 125, so the side length is 5 cm."
+      },
+      {
+        en:"What is the probability of choosing an even number randomly from 1 to 12?",
+        vi:"Xác suất chọn ngẫu nhiên một số chẵn từ 1 đến 12 là bao nhiêu?",
+        options:["1/3","1/2","2/3","5/12"], answer:1,
+        explanation:"Even numbers are 2, 4, 6, 8, 10, 12: 6 favourable outcomes out of 12. Probability = 6/12 = 1/2."
+      },
+      {
+        en:"If you roll a die once, what is the probability of getting a number greater than 4?",
+        vi:"Gieo một con xúc xắc một lần. Xác suất xuất hiện số lớn hơn 4 là bao nhiêu?",
+        options:["1/6","1/3","1/2","2/3"], answer:1,
+        explanation:"Numbers greater than 4 are 5 and 6. Probability = 2/6 = 1/3."
+      }
+    ]
+  },
+  {
+    title: "ĐỀ LUYỆN TẬP 2",
+    chart:{
+      labels:["Lan","Minh","Hoa","Nam"],
+      series:[
+        {name:"Monday", values:[3,2,3.5,2.5], color:"#3979b9"},
+        {name:"Wednesday", values:[2.5,4,3,2], color:"#c84d45"},
+        {name:"Friday", values:[3.5,2.5,2,4], color:"#8db84a"}
+      ]
+    },
+    questions:[
+      {
+        en:"Who studied the shortest amount of time on Monday?",
+        vi:"Ai học ít thời gian nhất vào thứ Hai?",
+        options:["Lan","Minh","Hoa","Nam"], answer:1,
+        explanation:"On Monday: Lan = 3, Minh = 2, Hoa = 3.5, Nam = 2.5 hours. The shortest time is 2 hours."
+      },
+      {
+        en:"Who studied the longest amount of time on Wednesday?",
+        vi:"Ai học nhiều thời gian nhất vào thứ Tư?",
+        options:["Lan","Minh","Hoa","Nam"], answer:1,
+        explanation:"On Wednesday, Minh studied 4 hours, which is the greatest value."
+      },
+      {
+        en:"How many hours longer did Nam study than Hoa on Friday?",
+        vi:"Vào thứ Sáu, Nam học nhiều hơn Hoa bao nhiêu giờ?",
+        options:["1 hour","1.5 hours","2 hours","2.5 hours"], answer:2,
+        explanation:"Nam studied 4 hours and Hoa studied 2 hours. Difference: 4 − 2 = 2 hours."
+      },
+      {
+        en:"How many hours did Lan and Minh study altogether?",
+        vi:"Lan và Minh đã học tổng cộng bao nhiêu giờ?",
+        options:["16.5 hours","17 hours","17.5 hours","18 hours"], answer:2,
+        explanation:"Lan: 3 + 2.5 + 3.5 = 9 hours. Minh: 2 + 4 + 2.5 = 8.5 hours. Altogether: 17.5 hours."
+      },
+      {
+        en:"A circle has a diameter of 22.5 cm. Find its circumference. Use π = 3.14.",
+        vi:"Hình tròn có đường kính 22,5 cm. Tính chu vi, lấy π = 3,14.",
+        options:["35.325 cm","70.65 cm","70.65 cm²","141.3 cm"], answer:1,
+        explanation:"C = π × d = 3.14 × 22.5 = 70.65 cm."
+      },
+      {
+        en:"A trapezium has bases of 10.8 m and 15.2 m. Its height is 7 m. Find its area.",
+        vi:"Hình thang có hai đáy 10,8 m và 15,2 m, chiều cao 7 m. Tính diện tích.",
+        options:["84 m²","91 m²","98 m²","182 m²"], answer:1,
+        explanation:"Average of the bases = (10.8 + 15.2) ÷ 2 = 13 m. Area = 13 × 7 = 91 m²."
+      },
+      {
+        en:"A rectangular prism is 18.4 m long, 11.6 m wide and 7.5 m high. Find its lateral surface area.",
+        vi:"Hình hộp chữ nhật dài 18,4 m, rộng 11,6 m, cao 7,5 m. Tính diện tích xung quanh.",
+        options:["225 m²","450 m²","640.1 m²","900 m²"], answer:1,
+        explanation:"Lateral surface area = 2 × (18.4 + 11.6) × 7.5 = 2 × 30 × 7.5 = 450 m²."
+      },
+      {
+        en:"A cube has a volume of 216 cm³. What is its side length?",
+        vi:"Hình lập phương có thể tích 216 cm³. Cạnh dài bao nhiêu?",
+        options:["5 cm","6 cm","8 cm","36 cm"], answer:1,
+        explanation:"6 × 6 × 6 = 216, so the side length is 6 cm."
+      },
+      {
+        en:"What is the probability of choosing a multiple of 3 randomly from 1 to 15?",
+        vi:"Xác suất chọn ngẫu nhiên một bội của 3 từ 1 đến 15 là bao nhiêu?",
+        options:["1/5","1/3","2/5","1/2"], answer:1,
+        explanation:"Multiples of 3 are 3, 6, 9, 12, 15: 5 out of 15. Probability = 5/15 = 1/3."
+      },
+      {
+        en:"A bag contains 4 red balls and 6 blue balls. What is the probability of choosing a blue ball?",
+        vi:"Túi có 4 bóng đỏ và 6 bóng xanh. Xác suất lấy được bóng xanh là bao nhiêu?",
+        options:["2/5","1/2","3/5","2/3"], answer:2,
+        explanation:"There are 10 balls in total and 6 are blue. Probability = 6/10 = 3/5."
+      }
+    ]
+  },
+  {
+    title: "ĐỀ LUYỆN TẬP 3",
+    chart:{
+      labels:["Mai","Khoa","Linh","Phuc"],
+      series:[
+        {name:"Monday", values:[2.5,4,3,2], color:"#3979b9"},
+        {name:"Wednesday", values:[3.5,2.5,4,3], color:"#c84d45"},
+        {name:"Friday", values:[2,3,2.5,4], color:"#8db84a"}
+      ]
+    },
+    questions:[
+      {
+        en:"Who studied the shortest amount of time on Monday?",
+        vi:"Ai học ít thời gian nhất vào thứ Hai?",
+        options:["Mai","Khoa","Linh","Phuc"], answer:3,
+        explanation:"On Monday: Mai = 2.5, Khoa = 4, Linh = 3, Phuc = 2 hours. The shortest time is 2 hours."
+      },
+      {
+        en:"Who studied the longest amount of time on Wednesday?",
+        vi:"Ai học nhiều thời gian nhất vào thứ Tư?",
+        options:["Mai","Khoa","Linh","Phuc"], answer:2,
+        explanation:"On Wednesday, Linh studied 4 hours, the greatest amount."
+      },
+      {
+        en:"How many hours longer did Khoa study than Mai on Monday?",
+        vi:"Vào thứ Hai, Khoa học nhiều hơn Mai bao nhiêu giờ?",
+        options:["1 hour","1.5 hours","2 hours","2.5 hours"], answer:1,
+        explanation:"Khoa studied 4 hours and Mai studied 2.5 hours. Difference: 4 − 2.5 = 1.5 hours."
+      },
+      {
+        en:"How many hours did Mai and Phuc study altogether?",
+        vi:"Mai và Phuc đã học tổng cộng bao nhiêu giờ?",
+        options:["16 hours","16.5 hours","17 hours","17.5 hours"], answer:2,
+        explanation:"Mai: 2.5 + 3.5 + 2 = 8 hours. Phuc: 2 + 3 + 4 = 9 hours. Altogether: 17 hours."
+      },
+      {
+        en:"A circle has a diameter of 31.5 cm. Find its circumference. Use π = 3.14.",
+        vi:"Hình tròn có đường kính 31,5 cm. Tính chu vi, lấy π = 3,14.",
+        options:["49.455 cm","98.91 cm","98.91 cm²","197.82 cm"], answer:1,
+        explanation:"C = π × d = 3.14 × 31.5 = 98.91 cm."
+      },
+      {
+        en:"In a trapezium, the average of the two bases is 16.4 m and the height is 5 m. Find its area.",
+        vi:"Hình thang có trung bình cộng hai đáy 16,4 m và chiều cao 5 m. Tính diện tích.",
+        options:["41 m²","82 m²","164 m²","328 m²"], answer:1,
+        explanation:"Area = average of the two bases × height = 16.4 × 5 = 82 m²."
+      },
+      {
+        en:"A rectangular prism is 30.2 m long, 14.8 m wide and 9 m high. Find its lateral surface area.",
+        vi:"Hình hộp chữ nhật dài 30,2 m, rộng 14,8 m, cao 9 m. Tính diện tích xung quanh.",
+        options:["405 m²","720 m²","810 m²","1620 m²"], answer:2,
+        explanation:"Lateral surface area = 2 × (30.2 + 14.8) × 9 = 2 × 45 × 9 = 810 m²."
+      },
+      {
+        en:"A cube has a volume of 343 cm³. What is its side length?",
+        vi:"Hình lập phương có thể tích 343 cm³. Cạnh dài bao nhiêu?",
+        options:["6 cm","7 cm","8 cm","49 cm"], answer:1,
+        explanation:"7 × 7 × 7 = 343, so the side length is 7 cm."
+      },
+      {
+        en:"What is the probability of choosing an odd number randomly from 1 to 20?",
+        vi:"Xác suất chọn ngẫu nhiên một số lẻ từ 1 đến 20 là bao nhiêu?",
+        options:["1/4","2/5","1/2","3/5"], answer:2,
+        explanation:"There are 10 odd numbers from 1 to 20 out of 20 numbers. Probability = 10/20 = 1/2."
+      },
+      {
+        en:"If you roll a die once, what is the probability of getting a prime number?",
+        vi:"Gieo một con xúc xắc một lần. Xác suất xuất hiện số nguyên tố là bao nhiêu?",
+        options:["1/3","1/2","2/3","5/6"], answer:1,
+        explanation:"Prime numbers on a die are 2, 3 and 5. Probability = 3/6 = 1/2."
+      }
+    ]
+  }
+];
+
+const state = tests.map(() => ({answers:{}, submitted:false, score:null}));
+let currentTest = 0;
+
+const testSelect = document.getElementById("testSelect");
+const testTitle = document.getElementById("testTitle");
+const questionList = document.getElementById("questionList");
+const result = document.getElementById("result");
+const notice = document.getElementById("notice");
+const scoreBoard = document.getElementById("scoreBoard");
+
+function loadScores(){
+  const saved = JSON.parse(localStorage.getItem("mathEnglishScores") || "[]");
+  tests.forEach((_,i)=>{
+    if(typeof saved[i] === "number") state[i].score = saved[i];
+  });
+}
+function saveScores(){
+  localStorage.setItem("mathEnglishScores", JSON.stringify(state.map(s=>s.score)));
+}
+function renderScoreBoard(){
+  scoreBoard.innerHTML = tests.map((_,i)=>{
+    const score = state[i].score;
+    return `<div class="score-cell">Đề ${i+1}: ${score===null ? "Chưa làm" : score + "/10"}</div>`;
+  }).join("");
+}
+
+function drawChart(test){
+  const canvas = document.getElementById("chart");
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.max(720, rect.width * dpr);
+  canvas.height = 390 * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
+
+  const W = canvas.width / dpr;
+  const H = canvas.height / dpr;
+  const pad = {left:62,right:28,top:26,bottom:84};
+  const plotW = W-pad.left-pad.right;
+  const plotH = H-pad.top-pad.bottom;
+  const maxY = 5;
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,W,H);
+
+  ctx.font="14px Arial";
+  ctx.textAlign="right";
+  ctx.textBaseline="middle";
+  for(let y=0;y<=maxY;y+=0.5){
+    const py = pad.top + plotH - (y/maxY)*plotH;
+    ctx.strokeStyle = y===0 ? "#9fb4c1" : "#e1e8ed";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left,py);
+    ctx.lineTo(W-pad.right,py);
+    ctx.stroke();
+    ctx.fillStyle="#64748b";
+    ctx.fillText(String(y).replace(".5", ".5"), pad.left-10, py);
+  }
+
+  const labels = test.chart.labels;
+  const xStep = plotW/(labels.length-1);
+  ctx.textAlign="center";
+  ctx.textBaseline="top";
+  labels.forEach((label,i)=>{
+    const x = pad.left+i*xStep;
+    ctx.fillStyle="#475569";
+    ctx.fillText(label,x,pad.top+plotH+14);
+  });
+
+  test.chart.series.forEach(series=>{
+    ctx.strokeStyle=series.color;
+    ctx.fillStyle=series.color;
+    ctx.lineWidth=4;
+    ctx.beginPath();
+    series.values.forEach((v,i)=>{
+      const x=pad.left+i*xStep;
+      const y=pad.top+plotH-(v/maxY)*plotH;
+      if(i===0)ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    series.values.forEach((v,i)=>{
+      const x=pad.left+i*xStep;
+      const y=pad.top+plotH-(v/maxY)*plotH;
+      ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+    });
+  });
+
+  ctx.save();
+  ctx.translate(20,pad.top+plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign="center";
+  ctx.fillStyle="#475569";
+  ctx.font="bold 15px Arial";
+  ctx.fillText("Hour",0,0);
+  ctx.restore();
+
+  const legendY=H-30;
+  const totalLegendWidth=360;
+  let lx=(W-totalLegendWidth)/2;
+  test.chart.series.forEach(series=>{
+    ctx.strokeStyle=series.color;
+    ctx.lineWidth=4;
+    ctx.beginPath();ctx.moveTo(lx,legendY);ctx.lineTo(lx+32,legendY);ctx.stroke();
+    ctx.fillStyle=series.color;
+    ctx.beginPath();ctx.arc(lx+16,legendY,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle="#475569";
+    ctx.font="14px Arial";
+    ctx.textAlign="left";
+    ctx.textBaseline="middle";
+    ctx.fillText(series.name,lx+40,legendY);
+    lx+=120;
+  });
+}
+
+function speak(text){
+  if(!("speechSynthesis" in window)){
+    alert("Trình duyệt này chưa hỗ trợ đọc văn bản.");
+    return;
+  }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,""));
+  utterance.lang="en-US";
+  utterance.rate=0.88;
+  speechSynthesis.speak(utterance);
+}
+
+function renderQuestions(){
+  const test=tests[currentTest];
+  const s=state[currentTest];
+  testTitle.textContent=test.title;
+  result.textContent=s.submitted ? `Kết quả: ${s.score}/10` : "";
+  notice.textContent="";
+
+  questionList.innerHTML=test.questions.map((q,qi)=>{
+    const selected=s.answers[qi];
+    const submitted=s.submitted;
+    const cls=submitted ? (selected===q.answer ? "correct" : "wrong") : "";
+    const options=q.options.map((opt,oi)=>`
+      <label class="option">
+        <input type="radio" name="q${qi}" value="${oi}" ${selected===oi?"checked":""} ${submitted?"disabled":""}>
+        <span><b>${String.fromCharCode(65+oi)}.</b> ${opt}</span>
+      </label>
+    `).join("");
+    const answerText=q.options[q.answer];
+    return `
+      <article class="question ${cls}" data-q="${qi}">
+        <p class="q-title">Question ${qi+1}. ${q.en}</p>
+        <div class="q-actions">
+          <button class="speak" type="button" data-speak="${qi}">🔊 Nghe câu hỏi</button>
+        </div>
+        <div class="options">${options}</div>
+        <div class="feedback ${submitted?"show":""}">
+          <strong>${selected===q.answer ? "✓ Chính xác" : "✗ Chưa đúng"} — Đáp án: ${String.fromCharCode(65+q.answer)}. ${answerText}</strong><br>
+          <span><b>Dịch:</b> ${q.vi}</span><br>
+          <span><b>Giải thích:</b> ${q.explanation}</span>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  questionList.querySelectorAll('input[type="radio"]').forEach(input=>{
+    input.addEventListener("change",e=>{
+      const qi=Number(e.target.name.slice(1));
+      state[currentTest].answers[qi]=Number(e.target.value);
+      notice.textContent="";
+    });
+  });
+  questionList.querySelectorAll(".speak").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      speak(test.questions[Number(btn.dataset.speak)].en);
+    });
+  });
+
+  requestAnimationFrame(()=>drawChart(test));
+}
+
+function submitTest(){
+  const s=state[currentTest];
+  const unanswered=[];
+  tests[currentTest].questions.forEach((_,i)=>{
+    if(s.answers[i]===undefined) unanswered.push(i+1);
+  });
+  if(unanswered.length){
+    notice.textContent=`Bạn còn chưa chọn đáp án ở câu: ${unanswered.join(", ")}.`;
+    const first=document.querySelector(`[data-q="${unanswered[0]-1}"]`);
+    if(first) first.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  let score=0;
+  tests[currentTest].questions.forEach((q,i)=>{
+    if(s.answers[i]===q.answer)score++;
+  });
+  s.submitted=true;
+  s.score=score;
+  saveScores();
+  renderScoreBoard();
+  renderQuestions();
+  notice.textContent=score===10 ? "Xuất sắc! Em đã làm đúng toàn bộ 10 câu." :
+    score>=8 ? "Rất tốt! Hãy đọc lại phần giải thích ở các câu sai." :
+    score>=6 ? "Khá tốt. Em nên ôn lại từ khóa và công thức trước khi làm lại." :
+    "Em hãy xem kỹ bản dịch và lời giải, sau đó bấm “Làm lại đề này”.";
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
+
+function resetCurrent(){
+  state[currentTest].answers={};
+  state[currentTest].submitted=false;
+  state[currentTest].score=null;
+  saveScores();
+  renderScoreBoard();
+  renderQuestions();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+testSelect.addEventListener("change",e=>{
+  currentTest=Number(e.target.value);
+  renderQuestions();
+});
+document.getElementById("submitBtn").addEventListener("click",submitTest);
+document.getElementById("resetBtn").addEventListener("click",resetCurrent);
+document.getElementById("printBtn").addEventListener("click",()=>window.print());
+document.getElementById("clearScoresBtn").addEventListener("click",()=>{
+  if(confirm("Bạn có chắc muốn xóa toàn bộ điểm đã lưu?")){
+    localStorage.removeItem("mathEnglishScores");
+    state.forEach(s=>{s.score=null;s.submitted=false;s.answers={};});
+    renderScoreBoard();
+    renderQuestions();
+  }
+});
+window.addEventListener("resize",()=>drawChart(tests[currentTest]));
+
+loadScores();
+renderScoreBoard();
+renderQuestions();
+</script>
+</body>
+</html>
