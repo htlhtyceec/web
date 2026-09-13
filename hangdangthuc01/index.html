@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#030712">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Chinh Phục 7 Hằng Đẳng Thức - Lớp Toán EEC</title>
+  <meta name="description" content="Game trắc nghiệm tương tác giúp học sinh lớp 8 và học sinh mất gốc thuộc lòng, nhận biết và vận dụng thành thạo 7 hằng đẳng thức đáng nhớ. Lớp Toán EEC - 0829120482.">
+
+  <!-- Google Fonts: Outfit & Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- KaTeX CSS & JS for beautiful math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <!-- ====================================================================
+         HEADER (Thương hiệu Lớp Toán EEC & Điều khiển âm thanh, thông tin)
+         ==================================================================== -->
+    <header class="site-header">
+      <div class="brand-badge btn-open-class-info" title="Xem thông tin Lớp Toán EEC">
+        <div class="brand-logo-icon">EEC</div>
+        <div class="brand-info">
+          <span class="brand-name">Lớp Toán EEC</span>
+          <span class="brand-phone">📞 0829120482</span>
+          <span class="brand-slogan-small">Nơi Toán khó hóa Toán vui</span>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <button id="btn-toggle-sound" class="icon-btn active" title="Bật / Tắt âm thanh">🔊</button>
+        <button class="icon-btn btn-open-tips" title="Mẹo nhớ 30 giây & Sổ tay">📖</button>
+        <button class="icon-btn btn-open-powers" title="Bảng số mũ">🔢</button>
+        <button class="icon-btn btn-open-class-info" title="Thông tin lớp học">ℹ️</button>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         GAME STATS BAR (Hiển thị điểm, số tim và combo)
+         ==================================================================== -->
+    <div id="game-stats-bar" class="game-stats-bar">
+      <div class="stat-item">
+        <span id="stat-hearts" class="hearts-container">❤️❤️❤️❤️❤️</span>
+      </div>
+      <div class="stat-item">
+        <span id="stat-streak" class="combo-badge" style="display: none;">Combo x2 🔥</span>
+        <span id="stat-score" class="score-badge">0đ</span>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         SCREEN 1: MÀN HÌNH KHỞI ĐỘNG (HOME)
+         ==================================================================== -->
+    <main id="screen-home" class="screen-view active">
+      <section class="home-hero">
+        <div class="hero-tag">⚡ Chuyên đề Đại số Lớp 8</div>
+        <h1 class="hero-title">CHINH PHỤC 7 HẰNG ĐẲNG THỨC</h1>
+        <p class="hero-subtitle">Học thuộc • Nhận biết • Bắt bẫy • Phản xạ nhanh</p>
+
+        <!-- Thẻ nhận diện thương hiệu Lớp Toán EEC -->
+        <div class="hero-school-card">
+          <div class="school-name">Lớp Toán EEC - 0829120482</div>
+          <div class="school-address">📍 Đ/c: Số 18 ngõ 43 Cầu Cốc, Tây Mỗ, Nam Từ Liêm, Hà Nội</div>
+          <div class="school-slogan">EEC – Nơi Toán khó hóa Toán vui 🌟</div>
+        </div>
+
+        <!-- Thanh công cụ nhanh -->
+        <div class="quick-tools-grid">
+          <div class="quick-tool-card btn-open-tips">
+            <div class="quick-tool-icon">💡</div>
+            <div class="quick-tool-title">Mẹo Nhớ 30s</div>
+          </div>
+          <div class="quick-tool-card btn-open-powers">
+            <div class="quick-tool-icon">📊</div>
+            <div class="quick-tool-title">Bảng Số Mũ</div>
+          </div>
+          <div class="quick-tool-card" id="btn-start-match-pair">
+            <div class="quick-tool-icon">🧩</div>
+            <div class="quick-tool-title">Ghép Cặp HĐT</div>
+          </div>
+        </div>
+
+        <!-- Danh sách các chế độ chơi chính -->
+        <h2 class="modes-section-title">🎮 Chọn Chế Độ Chơi:</h2>
+        <div class="game-modes-grid">
+          
+          <!-- Chế độ 1: Hành Trình 7 Chặng -->
+          <div class="mode-card primary" id="btn-start-campaign">
+            <div class="mode-card-header">
+              <div class="mode-card-icon">🗺️</div>
+              <div>
+                <h3 class="mode-card-title">Hành Trình 7 Chặng</h3>
+                <span class="mode-card-tag">Chế độ cốt truyện</span>
+              </div>
+            </div>
+            <p class="mode-card-desc">Vượt qua lần lượt 7 HĐT từ dễ đến nâng cao và mở khóa Chặng 8 Bậc Thầy EEC!</p>
+            <button class="mode-card-btn">
+              <span>BẮT ĐẦU CHẶNG 1</span>
+              <span>➔</span>
+            </button>
+          </div>
+
+          <!-- Chế độ 2: Cứu Mất Gốc -->
+          <div class="mode-card remedial" id="btn-start-remedial">
+            <div class="mode-card-header">
+              <div class="mode-card-icon">🛟</div>
+              <div>
+                <h3 class="mode-card-title">CỨU MẤT GỐC</h3>
+                <span class="mode-card-tag">Dành cho học sinh yếu</span>
+              </div>
+            </div>
+            <p class="mode-card-desc">Phương pháp 5 bước sư phạm: Học 1 công thức ➔ Mẹo vần ➔ 3 câu siêu dễ ➔ Tự tin làm chủ!</p>
+            <button class="mode-card-btn">
+              <span>LẤY LẠI GỐC NGAY</span>
+              <span>➔</span>
+            </button>
+          </div>
+
+          <!-- Chế độ 3: Thợ Săn Lỗi Sai -->
+          <div class="mode-card hunter" id="btn-start-hunter">
+            <div class="mode-card-header">
+              <div class="mode-card-icon">🕵️‍♂️</div>
+              <div>
+                <h3 class="mode-card-title">Thợ Săn Lỗi Sai</h3>
+                <span class="mode-card-tag">Tránh 14 bẫy kinh điển</span>
+              </div>
+            </div>
+            <p class="mode-card-desc">Nhập vai giáo viên 'bắt lỗi' trong bài làm của An, Bình, Cúc. Cực kỳ hiệu quả!</p>
+            <button class="mode-card-btn">
+              <span>ĐI SĂN LỖI SAI</span>
+              <span>➔</span>
+            </button>
+          </div>
+
+          <!-- Chế độ 4: Đấu 60 Giây -->
+          <div class="mode-card speed btn-start-speed60">
+            <div class="mode-card-header">
+              <div class="mode-card-icon">⚡</div>
+              <div>
+                <h3 class="mode-card-title">Đấu 60 Giây</h3>
+                <span class="mode-card-tag">Phản xạ tốc độ</span>
+              </div>
+            </div>
+            <p class="mode-card-desc">Thử thách tốc độ nhận biết trong 60 giây, tích lũy chuỗi combo để giành Huy Hiệu Vàng!</p>
+            <button class="mode-card-btn">
+              <span>THỬ THÁCH 60S</span>
+              <span>➔</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <!-- ====================================================================
+         SCREEN 2: BẢN ĐỒ CHẶNG (STAGES ROADMAP)
+         ==================================================================== -->
+    <section id="screen-stages" class="screen-view">
+      <div class="arena-header">
+        <button class="btn-secondary btn-go-home">⬅ Quay lại</button>
+        <h2 style="font-size: 18px; font-weight: 800;">Lộ Trình 7 Chặng</h2>
+        <div style="width: 70px;"></div>
+      </div>
+
+      <div id="stages-roadmap-container" class="stages-roadmap">
+        <!-- Javascript renders stage items here -->
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 3: ĐẤU TRƯỜNG CHƠI CHÍNH (PLAY ARENA)
+         ==================================================================== -->
+    <section id="screen-arena" class="screen-view">
+      <!-- Arena Header -->
+      <div class="arena-header">
+        <button class="btn-secondary btn-go-home" style="padding: 6px 12px; font-size: 13px;">🏠 Thoát</button>
+        <div class="arena-title-group">
+          <span id="arena-stage-tag" class="stage-tag">CHẶNG 1</span>
+        </div>
+        <button class="btn-secondary btn-open-tips" style="padding: 6px 12px; font-size: 13px;">💡 Mẹo</button>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-bar-wrap">
+        <div id="arena-progress-fill" class="progress-bar-fill"></div>
+      </div>
+
+      <!-- Speed 60s Timer Bar (chỉ hiện khi chơi Đấu 60s) -->
+      <div id="speed-timer-container" style="display: none;">
+        <div id="speed-timer-text" class="speed-timer-text">⏱️ Còn lại: 60s</div>
+        <div class="speed-timer-wrap">
+          <div id="speed-timer-fill" class="speed-timer-fill"></div>
+        </div>
+      </div>
+
+      <!-- Thẻ Card Câu Hỏi Lớn -->
+      <div class="question-card">
+        <span id="q-type-badge" class="question-type-badge">TRẮC NGHIỆM</span>
+        <div id="q-author-note" class="question-author-note" style="display: none;"></div>
+        <div id="q-prompt" class="question-prompt">Nội dung câu hỏi đang tải...</div>
+      </div>
+
+      <!-- Khung chứa các nút đáp án lớn A, B, C, D -->
+      <div id="q-options-container" class="options-grid">
+        <!-- Javascript renders option buttons here -->
+      </div>
+
+      <!-- Hộp giải thích & phản hồi tức thì sau khi chọn -->
+      <div id="q-feedback-box" class="feedback-box">
+        <div id="feedback-title" class="feedback-header">🎉 Chính xác!</div>
+        <div id="feedback-explanation" class="feedback-explanation">Giải thích công thức chuẩn...</div>
+        <div class="feedback-actions">
+          <button id="btn-retry-question" class="btn-secondary" style="display: none;">🔄 Thử lại câu này</button>
+          <button id="btn-next-question" class="btn-primary">Tiếp tục ➔</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 4: CỨU MẤT GỐC - MÀN HÌNH HƯỚNG DẪN 5 BƯỚC
+         ==================================================================== -->
+    <section id="screen-remedial-guide" class="screen-view">
+      <div class="arena-header">
+        <button class="btn-secondary btn-go-home">⬅ Trang chủ</button>
+        <h2 style="font-size: 17px; font-weight: 800; color: var(--accent-green-dark);">🛟 Lộ Trình Cứu Mất Gốc</h2>
+        <div style="width: 70px;"></div>
+      </div>
+
+      <div class="remedial-step-bar">
+        <div class="remedial-step-item active">
+          <div class="remedial-step-dot">1</div>
+          <span>Xem HĐT</span>
+        </div>
+        <div class="remedial-step-item">
+          <div class="remedial-step-dot">2</div>
+          <span>3 Câu Dễ</span>
+        </div>
+        <div class="remedial-step-item">
+          <div class="remedial-step-dot">3</div>
+          <span>Nhận Biết</span>
+        </div>
+        <div class="remedial-step-item">
+          <div class="remedial-step-dot">4</div>
+          <span>Vận Dụng</span>
+        </div>
+      </div>
+
+      <div class="question-card" style="text-align: left;">
+        <span class="question-type-badge" style="background: #dcfce7; color: #15803d;">BƯỚC 1: HỌC THUỘC CÔNG THỨC</span>
+        <h3 id="rg-formula-title" style="font-size: 20px; font-weight: 800; color: var(--primary); margin: 6px 0;">Bình phương của một tổng</h3>
+        
+        <div id="rg-formula-display" class="question-math-display" style="width: 100%; text-align: center; margin: 12px 0;">
+          $(A + B)^2 = A^2 + 2AB + B^2$
+        </div>
+
+        <div id="rg-formula-rhythm" style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 10px 14px; border-radius: 6px; font-weight: 700; color: #065f46; margin-bottom: 10px;">
+          🎵 Nhẩm theo điệu: "Bình phương đầu + hai lần tích + bình phương cuối"
+        </div>
+
+        <div style="font-size: 14px; color: var(--text-main); margin-bottom: 8px;">
+          <strong>💡 Mẹo nhớ:</strong> <span id="rg-formula-tip">Nhớ đừng quên số 2 ở giữa (+2AB).</span>
+        </div>
+
+        <div style="font-size: 13px; color: #b91c1c;">
+          <strong>⚠️ Bẫy cần tránh:</strong> <span id="rg-formula-trap">Lỗi sai: Viết nhầm thành A² + B² (quên mất 2AB).</span>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 16px;">
+        <button id="btn-rg-start-practice" class="btn-primary" style="padding: 14px 32px; font-size: 16px; width: 100%; max-width: 360px;">
+          BẮT ĐẦU LUYỆN TẬP ➔
+        </button>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 5: MINI-GAME GHÉP CẶP (MATCH PAIRS)
+         ==================================================================== -->
+    <section id="screen-match-pair" class="screen-view">
+      <div class="arena-header">
+        <button class="btn-secondary btn-go-home">⬅ Quay lại</button>
+        <h2 style="font-size: 17px; font-weight: 800;">🧩 Ghép Cặp Hằng Đẳng Thức</h2>
+        <button class="btn-secondary btn-open-tips">💡 Mẹo</button>
+      </div>
+
+      <p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 12px;">
+        Chạm chọn biểu thức vế trái, sau đó chạm chọn khai triển đúng ở vế phải để ghép cặp!
+      </p>
+
+      <div id="match-pairs-board">
+        <!-- Javascript renders matching columns -->
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCREEN 6: MÀN HÌNH TỔNG KẾT & TRAO HUY HIỆU (SUMMARY)
+         ==================================================================== -->
+    <section id="screen-summary" class="screen-view">
+      <div class="summary-card">
+        
+        <!-- Khung trao huy hiệu vinh danh -->
+        <div class="badge-showcase">
+          <div id="summary-badge-icon" class="badge-icon-large">👑</div>
+          <h2 id="summary-badge-name" class="badge-name-title">BẬC THẦY 7 HẰNG ĐẲNG THỨC</h2>
+          <p id="summary-badge-desc" class="badge-description">Xuất sắc tuyệt đối! Bạn đã làm chủ hoàn toàn 7 hằng đẳng thức!</p>
+        </div>
+
+        <!-- Thống kê điểm và tỉ lệ chính xác -->
+        <div class="summary-stats-grid">
+          <div class="summary-stat-box">
+            <div id="sum-stat-score" class="summary-stat-val">100đ</div>
+            <div class="summary-stat-lbl">TỔNG ĐIỂM</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-stat-correct" class="summary-stat-val">10/10</div>
+            <div class="summary-stat-lbl">CÂU ĐÚNG</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-stat-accuracy" class="summary-stat-val">100%</div>
+            <div class="summary-stat-lbl">ĐỘ CHÍNH XÁC</div>
+          </div>
+          <div class="summary-stat-box">
+            <div id="sum-stat-streak" class="summary-stat-val">10</div>
+            <div class="summary-stat-lbl">COMBO CAO NHẤT</div>
+          </div>
+        </div>
+
+        <!-- Khu vực nhắc nhở công thức cần ôn nếu có sai -->
+        <div id="summary-mistakes-box" class="mistakes-review-card" style="display: none;">
+          <div class="mistakes-title">
+            <span>⚠️</span> <strong>CÁC CÔNG THỨC CẦN ÔN LẠI THÊM:</strong>
+          </div>
+          <ul id="summary-mistakes-list" class="mistakes-list">
+            <!-- Rendered by JS -->
+          </ul>
+        </div>
+
+        <!-- Các nút hành động -->
+        <div class="summary-actions-group">
+          <button id="btn-review-mistakes" class="btn-secondary" style="border-color: #f59e0b; color: #b45309;">
+            🔄 ÔN LẠI CÂU SAI
+          </button>
+          <button class="btn-secondary btn-start-speed60">
+            ⚡ THỬ THÁCH 60 GIÂY
+          </button>
+          <button id="btn-play-again" class="btn-primary">
+            🎮 CHƠI LẠI
+          </button>
+        </div>
+
+        <!-- Khu vực quảng bá Lớp Toán EEC ở màn hình kết thúc -->
+        <div class="summary-eec-promo">
+          <h3>Bạn muốn chinh phục Toán THCS dễ dàng hơn?</h3>
+          <p>Tham gia ngay các khóa học lấy gốc, bồi dưỡng và luyện thi chất lượng cao tại:</p>
+          <div style="font-weight: 900; font-size: 16px; margin-bottom: 2px;">Lớp Toán EEC - 0829120482</div>
+          <div style="font-size: 13px; opacity: 0.95; margin-bottom: 8px;">📍 Đ/c: Số 18 ngõ 43 Cầu Cốc, Tây Mỗ</div>
+          <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 800;">
+            EEC – Nơi Toán khó hóa Toán vui ✨
+          </div>
+          <div style="margin-top: 14px;">
+            <a href="tel:0829120482" class="btn-primary" style="background: #ffffff; color: var(--primary); text-decoration: none; display: inline-flex;">
+              📞 Gọi tư vấn: 0829120482
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         MODAL 1: MẸO NHỚ 30 GIÂY & SỔ TAY FLASHCARD
+         ==================================================================== -->
+    <div id="modal-tips" class="modal-backdrop">
+      <div class="modal-box">
+        <button class="modal-close-btn" title="Đóng">✕</button>
+        <h3 class="modal-title">💡 Mẹo Nhớ 30 Giây & Sổ Tay HĐT</h3>
+        <div id="modal-tips-content">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         MODAL 2: BẢNG SỐ MŨ & BÌNH PHƯƠNG
+         ==================================================================== -->
+    <div id="modal-powers" class="modal-backdrop">
+      <div class="modal-box">
+        <button class="modal-close-btn" title="Đóng">✕</button>
+        <h3 class="modal-title">📊 Bảng Bình Phương & Lập Phương Hay Dùng</h3>
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">
+          Ghi nhớ nhanh các số lũy thừa để nhận biết hằng đẳng thức ngay tức thì:
+        </p>
+        <div id="modal-powers-content">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         MODAL 3: PHAO CỨU SINH (HỒI TIM KHI HẾT TIM)
+         ==================================================================== -->
+    <div id="modal-rescue" class="modal-backdrop">
+      <div class="modal-box" style="text-align: center;">
+        <div style="font-size: 54px; margin-bottom: 8px;">🛟</div>
+        <h3 style="font-size: 20px; font-weight: 900; color: #dc2626; margin-bottom: 6px;">Bạn cần ôn lại một chút!</h3>
+        <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
+          Đừng nản lòng! Chỉ cần trả lời đúng <strong>3 câu nhận biết cơ bản</strong> để nhận lại ngay <strong>+2 Trái Tim ❤️❤️</strong> và tiếp tục hành trình!
+        </p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+          <button class="btn-secondary btn-open-tips">📖 Xem mẹo nhớ</button>
+          <button id="btn-start-heart-recovery" class="btn-primary">Nhận thử thách hồi tim ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         MODAL 4: THÔNG TIN LỚP TOÁN EEC
+         ==================================================================== -->
+    <div id="modal-class-info" class="modal-backdrop">
+      <div class="modal-box" style="text-align: center;">
+        <button class="modal-close-btn" title="Đóng">✕</button>
+        <div class="brand-logo-icon" style="margin: 0 auto 12px auto; width: 56px; height: 56px; font-size: 22px;">EEC</div>
+        <h3 style="font-size: 22px; font-weight: 900; color: var(--primary-dark); margin-bottom: 4px;">LỚP TOÁN EEC</h3>
+        <p style="font-size: 14px; font-weight: 800; color: var(--accent-green-dark); margin-bottom: 14px;">“EEC – Nơi Toán khó hóa Toán vui”</p>
+        
+        <div style="text-align: left; background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border-color); font-size: 14px;">
+          <p style="margin-bottom: 8px;">📞 <strong>Hotline / Zalo:</strong> <a href="tel:0829120482" style="color: var(--primary); font-weight: 800;">0829120482</a></p>
+          <p style="margin-bottom: 8px;">📍 <strong>Địa chỉ:</strong> Số 18 ngõ 43 Cầu Cốc, Tây Mỗ, Nam Từ Liêm, Hà Nội</p>
+          <p style="margin-bottom: 8px;">🎯 <strong>Chuyên môn:</strong></p>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 13px;">
+            <li>Lấy lại gốc môn Toán THCS nhanh chóng, hiệu quả.</li>
+            <li>Rèn luyện phương pháp tư duy và phản xạ Toán học thông qua các ứng dụng trực quan, sinh động.</li>
+            <li>Bồi dưỡng học sinh khá giỏi, luyện thi vào lớp 10 công lập.</li>
+          </ul>
+        </div>
+
+        <a href="tel:0829120482" class="btn-primary" style="text-decoration: none; width: 100%; justify-content: center; padding: 12px;">
+          📞 Gọi ngay: 0829120482
+        </a>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         FOOTER (Hiển thị thương hiệu Lớp Toán EEC liên tục)
+         ==================================================================== -->
+    <footer class="site-footer">
+      <div>
+        <span class="footer-brand">Lớp Toán EEC</span> • 
+        <a href="tel:0829120482" class="footer-phone">0829120482</a> • 
+        <span>Số 18 ngõ 43 Cầu Cốc, Tây Mỗ</span>
+      </div>
+      <div style="margin-top: 4px; font-size: 11px; opacity: 0.8;">
+        EEC – Nơi Toán khó hóa Toán vui ✨ Game học tập 7 Hằng Đẳng Thức
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Canvas hiệu ứng Confetti -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- JavaScript Modules in Order -->
+  <script src="js/math-data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
